@@ -2,3 +2,7 @@
 *.swo
 *.o
 *.so
+Gemfile.lock
+tmp/
+mkmkf.log
+Makefile
