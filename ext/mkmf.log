@@ -1,0 +1,23 @@
+have_header: checking for apngasm.h... -------------------- yes
+
+"gcc -o conftest -I/usr/local/rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0/x86_64-linux -I/usr/local/rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0/ruby/backward -I/usr/local/rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0 -I.    -x c++ conftest.c  -L. -L/usr/local/rvm/rubies/ruby-2.0.0-p247/lib -Wl,-R/usr/local/rvm/rubies/ruby-2.0.0-p247/lib -L. -fstack-protector -rdynamic -Wl,-export-dynamic     '-Wl,-rpath,/../lib' -Wl,-R -Wl,/usr/local/rvm/rubies/ruby-2.0.0-p247/lib -L/usr/local/rvm/rubies/ruby-2.0.0-p247/lib -lruby  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main(int argc, char **argv)
+4: {
+5:   return 0;
+6: }
+/* end */
+
+"gcc -E -I/usr/local/rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0/x86_64-linux -I/usr/local/rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0/ruby/backward -I/usr/local/rvm/rubies/ruby-2.0.0-p247/include/ruby-2.0.0 -I.    -x c++  conftest.c -o conftest.i"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <apngasm.h>
+/* end */
+
+--------------------
+
