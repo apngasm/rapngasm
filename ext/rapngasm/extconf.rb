@@ -1,6 +1,7 @@
-require 'mkmf'
+require 'mkmf-rice'
 
 $CFLAGS = "-x c++"
+$LOCAL_LIBS="-lapngasm"
 
 dir_config 'apngasm'
 
