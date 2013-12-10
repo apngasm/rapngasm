@@ -31,12 +31,18 @@ public:
   {
     return this->addFrame(filePath, delayNum, delayDen);
   }
+
+  bool assembleFile(const std::string &outputPath)
+  {
+    return this->assemble(outputPath);
+  }
 };
 
 extern "C"
 void Init_rapngasm()
 {
     define_class<APNGFrame>("APNGFrame")
+      .define_constructor(Constructor<APNGFrame>())
       .define_method("pixels", &APNGFrame::pixels)
       .define_method("width", &APNGFrame::width)
       .define_method("height", &APNGFrame::height)
@@ -53,5 +59,6 @@ void Init_rapngasm()
       .define_constructor(Constructor<RAPNGAsm>())
       .define_method("version", &RAPNGAsm::versionDisp)
       .define_method("add_apngframe", &RAPNGAsm::addAPNGFrame)
-      .define_method("add_apngframe", &RAPNGAsm::addAPNGFrameFromFile);
+      .define_method("add_apngframe", &RAPNGAsm::addAPNGFrameFromFile)
+      .define_method("assemble", &RAPNGAsm::assembleFile);
 }
