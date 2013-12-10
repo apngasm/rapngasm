@@ -6,26 +6,52 @@
 #include "rice/Data_Type.hpp"
 #include "rice/Constructor.hpp"
 #include "rice/String.hpp"
+#include <iostream>
+
 using namespace Rice;
+using namespace apngasm;
+
+class RAPNGAsm : public APNGAsm
+{
+
+public:
+  const char* versionDisp(void) const
+  {
+    return this->version();
+  }
+
+  size_t addAPNGFrame(const APNGFrame &frame)
+  {
+    return this->addFrame(frame);
+  }
+
+  size_t addAPNGFrameFromFile(const std::string &filePath,
+                              unsigned delayNum = DEFAULT_FRAME_NUMERATOR,
+                              unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
+  {
+    return this->addFrame(filePath, delayNum, delayDen);
+  }
+};
 
 extern "C"
 void Init_rapngasm()
 {
     define_class<APNGFrame>("APNGFrame")
-      /*.define_value("pixels", &APNGFrame::p)
-      .define_value("width", &APNGFrame::w)
-      .define_value("height", &APNGFrame::h)
-      .define_value("type", &APNGFrame::t)
-      .define_value("palette", &APNGFrame::pl)
-      .define_value("transparency", &APNGFrame::tr)
-      .define_value("palette_size", &APNGFrame::ps)
-      .define_value("transparency_size", &APNGFrame::ts)
-      .define_value("delay_numerator", &APNGFrame::delay_num)
-      .define_value("delay_denominator", &APNGFrame::delay_den)
-      .define_value("rows", &APNGFrame::rows)*/;
+      .define_method("pixels", &APNGFrame::pixels)
+      .define_method("width", &APNGFrame::width)
+      .define_method("height", &APNGFrame::height)
+      .define_method("color_type", &APNGFrame::colorType)
+      .define_method("palette", &APNGFrame::palette)
+      .define_method("transparency", &APNGFrame::transparency)
+      .define_method("palettes_size", &APNGFrame::paletteSize)
+      .define_method("transparency_size", &APNGFrame::transparencySize)
+      .define_method("delay_numerator", &APNGFrame::delayNum)
+      .define_method("delay_denominator", &APNGFrame::delayDen)
+      .define_method("rows", &APNGFrame::rows);
 
-    define_class<APNGAsm>("APNGAsm")
-      .define_constructor(Constructor<APNGAsm>())
-      .define_method("version", &APNGAsm::version);
-      //.define_method("add_frame", &APNGAsm::addFrame);
+    define_class<RAPNGAsm>("APNGAsm")
+      .define_constructor(Constructor<RAPNGAsm>())
+      .define_method("version", &RAPNGAsm::versionDisp)
+      .define_method("add_apngframe", &RAPNGAsm::addAPNGFrame)
+      .define_method("add_apngframe", &RAPNGAsm::addAPNGFrameFromFile);
 }
