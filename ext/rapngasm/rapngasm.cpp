@@ -6,7 +6,6 @@
 #include "rice/Data_Type.hpp"
 #include "rice/Constructor.hpp"
 #include "rice/String.hpp"
-#include <iostream>
 
 using namespace Rice;
 using namespace apngasm;
