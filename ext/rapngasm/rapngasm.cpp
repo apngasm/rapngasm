@@ -12,28 +12,16 @@ using namespace apngasm;
 
 class RAPNGAsm : public APNGAsm
 {
-
 public:
-  const char* versionDisp(void) const
-  {
-    return this->version();
-  }
-
   size_t addAPNGFrameFromFrame(const APNGFrame &frame)
   {
     return this->addFrame(frame);
   }
 
   size_t addAPNGFrameFromFile(const std::string &filePath,
-                              unsigned delayNum = DEFAULT_FRAME_NUMERATOR,
-                              unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
+                              unsigned delayNum = DEFAULT_FRAME_NUMERATOR, unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
   {
     return this->addFrame(filePath, delayNum, delayDen);
-  }
-
-  bool assembleFile(const std::string &outputPath)
-  {
-    return this->assemble(outputPath);
   }
 };
 
@@ -54,10 +42,13 @@ void Init_rapngasm()
       .define_method("delay_denominator", &APNGFrame::delayDen)
       .define_method("rows", &APNGFrame::rows);
 
-    define_class<RAPNGAsm>("APNGAsm")
+    define_class<APNGAsm>("APNGAsm")
+      .define_method("version", &APNGAsm::version)
+      .define_method("assemble", &APNGAsm::assemble);
+
+    define_class<RAPNGAsm, APNGAsm>("RAPNGAsm")
       .define_constructor(Constructor<RAPNGAsm>())
-      .define_method("version", &RAPNGAsm::versionDisp)
       .define_method("add_apngframe_from_frame", &RAPNGAsm::addAPNGFrameFromFrame)
-      .define_method("add_apngframe_from_file", &RAPNGAsm::addAPNGFrameFromFile)
-      .define_method("assemble", &RAPNGAsm::assembleFile);
+      .define_method("add_apngframe_from_file", &RAPNGAsm::addAPNGFrameFromFile, 
+                    (Arg("filePath"), Arg("delayNum") = DEFAULT_FRAME_NUMERATOR, Arg("delayDen") = DEFAULT_FRAME_DENOMINATOR));
 }
