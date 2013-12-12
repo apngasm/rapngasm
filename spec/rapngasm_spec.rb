@@ -29,4 +29,10 @@ describe 'RAPNGAsm'  do
       expect(File.exist?('./spec/out/apngasm_anim.png')).to eq(true)
     end
   end
+
+  describe '.disassemble' do
+    it 'disassemble an anmation png file and creates png files' do
+      @rapngasm.disassemble('./spec/out/apngasm_anim.png')
+    end
+  end
 end
