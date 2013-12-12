@@ -19,7 +19,7 @@ public:
     return this->version();
   }
 
-  size_t addAPNGFrame(const APNGFrame &frame)
+  size_t addAPNGFrameFromFrame(const APNGFrame &frame)
   {
     return this->addFrame(frame);
   }
@@ -57,7 +57,7 @@ void Init_rapngasm()
     define_class<RAPNGAsm>("APNGAsm")
       .define_constructor(Constructor<RAPNGAsm>())
       .define_method("version", &RAPNGAsm::versionDisp)
-      .define_method("add_apngframe", &RAPNGAsm::addAPNGFrame)
-      .define_method("add_apngframe", &RAPNGAsm::addAPNGFrameFromFile)
+      .define_method("add_apngframe_from_frame", &RAPNGAsm::addAPNGFrameFromFrame)
+      .define_method("add_apngframe_from_file", &RAPNGAsm::addAPNGFrameFromFile)
       .define_method("assemble", &RAPNGAsm::assembleFile);
 }
