@@ -29,7 +29,9 @@ extern "C"
 void Init_rapngasm()
 {
     define_class<APNGFrame>("APNGFrame")
-      .define_constructor(Constructor<APNGFrame>())
+      //.define_constructor(Constructor<APNGFrame>())
+      .define_constructor(Constructor<APNGFrame, const std::string, unsigned, unsigned>(),
+                         (Arg("file_path"), Arg("delay_num") = DEFAULT_FRAME_NUMERATOR, Arg("dela_den") = DEFAULT_FRAME_DENOMINATOR))
       .define_method("pixels", &APNGFrame::pixels)
       .define_method("width", &APNGFrame::width)
       .define_method("height", &APNGFrame::height)
@@ -50,5 +52,5 @@ void Init_rapngasm()
       .define_constructor(Constructor<RAPNGAsm>())
       .define_method("add_apngframe_from_frame", &RAPNGAsm::addAPNGFrameFromFrame)
       .define_method("add_apngframe_from_file", &RAPNGAsm::addAPNGFrameFromFile, 
-                    (Arg("filePath"), Arg("delayNum") = DEFAULT_FRAME_NUMERATOR, Arg("delayDen") = DEFAULT_FRAME_DENOMINATOR));
+                    (Arg("file_path"), Arg("delay_num") = DEFAULT_FRAME_NUMERATOR, Arg("delay_den") = DEFAULT_FRAME_DENOMINATOR));
 }
