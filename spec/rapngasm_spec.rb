@@ -32,7 +32,8 @@ describe 'RAPNGAsm'  do
 
   describe '.disassemble' do
     it 'disassemble an anmation png file and creates png files' do
-      @rapngasm.disassemble('./spec/out/apngasm_anim.png')
+      apngframes = @rapngasm.disassemble('./spec/out/apngasm_anim.png')
+      expect(apngframes).to be_an_instance_of(Array)
     end
   end
 end

@@ -25,16 +25,32 @@ public:
     return this->addFrame(filePath, delayNum, delayDen);
   }
 
-  // template<typename APNGFrame>
-  // std::vector<APNGFrame> from_ruby< std::vector<APNGFrame> > (Object o)
-  // {
-  //   Array a(o);
-  //   std::vector<APNGFrame> v;
-  //   for(Array::iterator aI = a.begin(); aI != a.end(); ++aI)
-  //       v.push_back(from_ruby<APNGFrame> (*aI));
-  //   return v;
-  // }
+  // template<typename T>
+  // T from_ruby(Object o);
+  
+  template<typename T>
+  Object to_ruby(T const & x);
 };
+
+// template<>
+// std::vector<APNGFrame> from_ruby<std::vector<APNGFrame> >(Object o)
+// {
+//   Array a(o);
+//   std::vector<APNGFrame> v;
+//   for(Array::iterator ai = a.begin(); ai != a.end(); ++ai)
+//     v.push_back(from_ruby<APNGFrame> (*ai));
+//   return v;
+// }
+
+template<>
+Object to_ruby<std::vector<APNGFrame> > (std::vector<APNGFrame> const & x)
+{
+  std::vector<APNGFrame> v = x;
+  Array a;
+  for (std::vector<APNGFrame>::iterator vi = v.begin(); vi != v.end(); ++vi)
+    a.push(to_ruby<APNGFrame> (*vi));
+  return a;
+}
 
 extern "C"
 void Init_rapngasm()
