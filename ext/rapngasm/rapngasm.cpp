@@ -71,7 +71,7 @@ unsigned char* from_ruby< unsigned char* > (Object o)
 {
   Array a(o);
   unsigned char* c = (unsigned char*)malloc(a.size());
-  for (int i = 0; i < a.size(); i++)
+  for (unsigned int i = 0; i < a.size(); i++)
     c[i] = from_ruby<unsigned char>(a[i]);
   return c;
 }
