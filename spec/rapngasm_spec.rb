@@ -1,4 +1,4 @@
-require_relative '../lib/rapngasm'
+require 'rapngasm'
 
 describe 'APNGAsm'  do
   before(:each) do
