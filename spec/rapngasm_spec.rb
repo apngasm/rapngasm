@@ -18,7 +18,7 @@ describe 'APNGAsm'  do
     end
   end
 
-  describe '.add_apngframe"' do
+  describe '.add_frame"' do
     it 'add an APNGFrame object into @apngasm' do
       @apngasm.add_frame(@apngframe)
       frame_num = @apngasm.add_frame_from_file(

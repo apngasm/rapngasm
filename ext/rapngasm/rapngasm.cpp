@@ -17,32 +17,16 @@ namespace apngasm
 class RAPNGAsm : public APNGAsm
 {
   public:
-    const char* versionDisp(void) const
-    {
-      return this->version();
-    }
-
     size_t addFrameFromFrameObject(const APNGFrame &frame)
     {
       return this->addFrame(frame);
     }
 
     size_t addFrameFromFile(const std::string &filePath,
-                                unsigned delayNum = DEFAULT_FRAME_NUMERATOR, unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
+                            unsigned delayNum = DEFAULT_FRAME_NUMERATOR, unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
     {
       return this->addFrame(filePath, delayNum, delayDen);
     }
-
-    bool assembleFile(const std::string &outputPath)
-    {
-      return this->assemble(outputPath);
-    }
-
-    const std::vector<APNGFrame>& disassembleFile(const std::string &filePath)
-    {
-      return this->disassemble(filePath);
-    }
-
 
     template<typename T>
     T from_ruby(Object o);
@@ -111,13 +95,16 @@ void Init_rapngasm()
       .define_method("delay_denominator", &APNGFrame::delayDen, (Arg("delay_denominator") = 0));
       // .define_method("rows", &APNGFrame::rows, (Arg("rows") = NULL));
 
-    define_class<RAPNGAsm>("APNGAsm")
+    define_class<APNGAsm>("APNGAsmSuper")
+      .define_constructor(Constructor<APNGAsm>())
+      .define_method("version", &APNGAsm::version)
+      .define_method("assemble", &APNGAsm::assemble)
+      .define_method("disassemble", &APNGAsm::disassemble)
+      .define_method("frame_count", &APNGAsm::frameCount)
+      .define_method("reset", &APNGAsm::reset);
+
+    define_class<RAPNGAsm, APNGAsm>("APNGAsm")
       .define_constructor(Constructor<RAPNGAsm>())
-      .define_method("version", &RAPNGAsm::versionDisp)
-      .define_method("assemble", &RAPNGAsm::assembleFile)
-      .define_method("disassemble", &RAPNGAsm::disassembleFile)
-      .define_method("frame_count", &RAPNGAsm::frameCount)
-      .define_method("reset", &RAPNGAsm::reset)
       .define_method("add_frame", &RAPNGAsm::addFrameFromFrameObject, Arg("frame"))
       .define_method("add_frame_from_file", &RAPNGAsm::addFrameFromFile, 
                     (Arg("filePath"), Arg("delayNum") = DEFAULT_FRAME_NUMERATOR, Arg("delayDen") = DEFAULT_FRAME_DENOMINATOR));
