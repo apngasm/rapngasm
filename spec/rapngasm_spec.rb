@@ -20,8 +20,8 @@ describe 'APNGAsm'  do
 
   describe '.add_apngframe"' do
     it 'add an APNGFrame object into @apngasm' do
-      @apngasm.add_apngframe(@apngframe)
-      frame_num = @apngasm.add_apngframe_from_file(
+      @apngasm.add_frame(@apngframe)
+      frame_num = @apngasm.add_frame_from_file(
         './spec/support/apngasm.png', 100, 1000)
       expect(frame_num).to eq(2)
     end
@@ -29,8 +29,8 @@ describe 'APNGAsm'  do
 
   describe '.assemble' do
     it 'creates an animation png file by frames' do
-      @apngasm.add_apngframe_from_file('./spec/support/test1.png', 100, 1000)
-      @apngasm.add_apngframe_from_file('./spec/support/test2.png', 100, 1000)
+      @apngasm.add_frame_from_file('./spec/support/test1.png', 100, 1000)
+      @apngasm.add_frame_from_file('./spec/support/test2.png', 100, 1000)
       @apngasm.assemble('./spec/out/apngasm_anim.png')
       expect(File.exist?('./spec/out/apngasm_anim.png')).to eq(true)
     end

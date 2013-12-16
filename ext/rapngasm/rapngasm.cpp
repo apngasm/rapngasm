@@ -14,9 +14,14 @@ using namespace apngasm;
 
 namespace apngasm
 {
-class RAPNGAsm : public apngasm::APNGAsm
+class RAPNGAsm : public APNGAsm
 {
   public:
+    const char* versionDisp(void) const
+    {
+      return this->version();
+    }
+
     size_t addFrameFromFrameObject(const APNGFrame &frame)
     {
       return this->addFrame(frame);
@@ -28,6 +33,15 @@ class RAPNGAsm : public apngasm::APNGAsm
       return this->addFrame(filePath, delayNum, delayDen);
     }
 
+    bool assembleFile(const std::string &outputPath)
+    {
+      return this->assemble(outputPath);
+    }
+
+    const std::vector<APNGFrame>& disassembleFile(const std::string &filePath)
+    {
+      return this->disassemble(filePath);
+    }
 
 
     template<typename T>
@@ -68,15 +82,15 @@ Object to_ruby< std::vector<APNGFrame> > (std::vector<APNGFrame> const & x)
   return a;
 }
 
-// template<>
-// unsigned char* from_ruby< unsigned char* >(Object o)
-// {
-//   Array a(o);
-//   unsigned char* c = (unsigned char*)malloc(a.size());
-//   for (int i = 0; i < a.size(); i++)
-//     c[i] = (unsigned char)a[i].value();
-//   return c;
-// }
+template<>
+unsigned char* from_ruby< unsigned char* > (Object o)
+{
+  Array a(o);
+  unsigned char* c = (unsigned char*)malloc(a.size());
+  for (int i = 0; i < a.size(); i++)
+    c[i] = from_ruby<unsigned char>(a[i]);
+  return c;
+}
 
 extern "C"
 void Init_rapngasm()
@@ -99,9 +113,9 @@ void Init_rapngasm()
 
     define_class<RAPNGAsm>("APNGAsm")
       .define_constructor(Constructor<RAPNGAsm>())
-      .define_method("version", &RAPNGAsm::version)
-      .define_method("assemble", &RAPNGAsm::assemble)
-      .define_method("disassemble", &RAPNGAsm::disassemble)
+      .define_method("version", &RAPNGAsm::versionDisp)
+      .define_method("assemble", &RAPNGAsm::assembleFile)
+      .define_method("disassemble", &RAPNGAsm::disassembleFile)
       .define_method("frame_count", &RAPNGAsm::frameCount)
       .define_method("reset", &RAPNGAsm::reset)
       .define_method("add_frame", &RAPNGAsm::addFrameFromFrameObject, Arg("frame"))
