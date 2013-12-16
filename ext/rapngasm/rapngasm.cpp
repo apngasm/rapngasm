@@ -7,6 +7,7 @@
 #include "rice/Constructor.hpp"
 #include "rice/String.hpp"
 #include "rice/Array.hpp"
+#include <iostream>
 
 using namespace Rice;
 using namespace apngasm;
@@ -25,8 +26,8 @@ public:
     return this->addFrame(filePath, delayNum, delayDen);
   }
 
-  // template<typename T>
-  // T from_ruby(Object o);
+  template<typename T>
+  T from_ruby(Object o);
   
   template<typename T>
   Object to_ruby(T const & x);
@@ -53,7 +54,7 @@ Object to_ruby< unsigned char* > (unsigned char* const & x)
 }
 
 template<>
-Object to_ruby<std::vector<APNGFrame> > (std::vector<APNGFrame> const & x)
+Object to_ruby< std::vector<APNGFrame> > (std::vector<APNGFrame> const & x)
 {
   std::vector<APNGFrame> v = x;
   Array a;
@@ -61,6 +62,16 @@ Object to_ruby<std::vector<APNGFrame> > (std::vector<APNGFrame> const & x)
     a.push(to_ruby<APNGFrame> (*vi));
   return a;
 }
+
+// template<>
+// unsigned char* from_ruby< unsigned char* >(Object o)
+// {
+//   Array a(o);
+//   unsigned char* c = (unsigned char*)malloc(a.size());
+//   for (int i = 0; i < a.size(); i++)
+//     c[i] = (unsigned char)a[i].value();
+//   return c;
+// }
 
 extern "C"
 void Init_rapngasm()
@@ -78,7 +89,7 @@ void Init_rapngasm()
       .define_method("palettes_size", &APNGFrame::paletteSize, (Arg("palettes_size") = 0))
       .define_method("transparency_size", &APNGFrame::transparencySize, (Arg("transparency_size") = NULL))
       .define_method("delay_numerator", &APNGFrame::delayNum, (Arg("delay_numerator") = 0))
-      .define_method("delay_denominator", &APNGFrame::delayDen, (Arg("delay_denominator") = 0))
+      .define_method("delay_denominator", &APNGFrame::delayDen, (Arg("delay_denominator") = 0));
       // .define_method("rows", &APNGFrame::rows, (Arg("rows") = NULL));
 
     define_class<APNGAsm>("APNGAsm")
