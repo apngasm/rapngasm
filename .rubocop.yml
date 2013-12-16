@@ -1,0 +1,2 @@
+GlobalVars:
+  Enabled: false # catches on extconf, which needs globals
