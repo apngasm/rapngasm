@@ -12,26 +12,31 @@
 using namespace Rice;
 using namespace apngasm;
 
-class RAPNGAsm : public APNGAsm
+namespace apngasm
 {
-public:
-  size_t addAPNGFrameFromFrame(const APNGFrame &frame)
-  {
-    return this->addFrame(frame);
-  }
+class RAPNGAsm : public apngasm::APNGAsm
+{
+  public:
+    size_t addFrameFromFrameObject(const APNGFrame &frame)
+    {
+      return this->addFrame(frame);
+    }
 
-  size_t addAPNGFrameFromFile(const std::string &filePath,
-                              unsigned delayNum = DEFAULT_FRAME_NUMERATOR, unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
-  {
-    return this->addFrame(filePath, delayNum, delayDen);
-  }
+    size_t addFrameFromFile(const std::string &filePath,
+                                unsigned delayNum = DEFAULT_FRAME_NUMERATOR, unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
+    {
+      return this->addFrame(filePath, delayNum, delayDen);
+    }
 
-  template<typename T>
-  T from_ruby(Object o);
-  
-  template<typename T>
-  Object to_ruby(T const & x);
-};
+
+
+    template<typename T>
+    T from_ruby(Object o);
+    
+    template<typename T>
+    Object to_ruby(T const & x);
+  };
+}
 
 // template<>
 // std::vector<APNGFrame> from_ruby<std::vector<APNGFrame> >(Object o)
@@ -92,15 +97,14 @@ void Init_rapngasm()
       .define_method("delay_denominator", &APNGFrame::delayDen, (Arg("delay_denominator") = 0));
       // .define_method("rows", &APNGFrame::rows, (Arg("rows") = NULL));
 
-    define_class<APNGAsm>("APNGAsm")
-      .define_method("version", &APNGAsm::version)
-      .define_method("assemble", &APNGAsm::assemble)
-      .define_method("disassemble", &APNGAsm::disassemble)
-      .define_method("reset", &APNGAsm::reset);
-
-    define_class<RAPNGAsm, APNGAsm>("RAPNGAsm")
+    define_class<RAPNGAsm>("RAPNGAsm")
       .define_constructor(Constructor<RAPNGAsm>())
-      .define_method("add_apngframe_from_frame", &RAPNGAsm::addAPNGFrameFromFrame)
-      .define_method("add_apngframe_from_file", &RAPNGAsm::addAPNGFrameFromFile, 
-                    (Arg("file_path"), Arg("delay_num") = DEFAULT_FRAME_NUMERATOR, Arg("delay_den") = DEFAULT_FRAME_DENOMINATOR));
+      .define_method("version", &RAPNGAsm::version)
+      .define_method("assemble", &RAPNGAsm::assemble)
+      .define_method("disassemble", &RAPNGAsm::disassemble)
+      .define_method("frame_count", &RAPNGAsm::frameCount)
+      .define_method("reset", &RAPNGAsm::reset)
+      .define_method("add_frame", &RAPNGAsm::addFrameFromFrameObject, Arg("frame"))
+      .define_method("add_frame_from_file", &RAPNGAsm::addFrameFromFile, 
+                    (Arg("filePath"), Arg("delayNum") = DEFAULT_FRAME_NUMERATOR, Arg("delayDen") = DEFAULT_FRAME_DENOMINATOR));
 }
