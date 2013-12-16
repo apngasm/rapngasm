@@ -97,7 +97,7 @@ void Init_rapngasm()
       .define_method("delay_denominator", &APNGFrame::delayDen, (Arg("delay_denominator") = 0));
       // .define_method("rows", &APNGFrame::rows, (Arg("rows") = NULL));
 
-    define_class<RAPNGAsm>("RAPNGAsm")
+    define_class<RAPNGAsm>("APNGAsm")
       .define_constructor(Constructor<RAPNGAsm>())
       .define_method("version", &RAPNGAsm::version)
       .define_method("assemble", &RAPNGAsm::assemble)
