@@ -31,15 +31,19 @@ describe 'APNGAsm'  do
     it 'creates an animation png file by frames' do
       @apngasm.add_frame_from_file('./spec/support/test1.png', 100, 1000)
       @apngasm.add_frame_from_file('./spec/support/test2.png', 100, 1000)
+      Dir.mkdir('./spec/out') unless Dir.exists?('./spec/out')
       @apngasm.assemble('./spec/out/apngasm_anim.png')
       expect(File.exist?('./spec/out/apngasm_anim.png')).to eq(true)
+      FileUtils.rm_rf('./spec/out')
     end
   end
 
   describe '.disassemble' do
     it 'disassemble an anmation png file and creates png files' do
+      Dir.mkdir('./spec/out') unless Dir.exists?('./spec/out')
       apngframes = @apngasm.disassemble('./spec/out/apngasm_anim.png')
       expect(apngframes).to be_an_instance_of(Array)
+      FileUtils.rm_rf('./spec/out')
     end
   end
 end

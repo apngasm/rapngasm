@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'rapngasm'
-  s.version     = '0.0.1'
+  s.version     = '1.0.1'
   s.license     = 'libpng/zlib'
   s.summary     = 'apngasm for Ruby'
   s.description = 'Ruby native extension for the apngasm APNG Assembler.'
@@ -11,5 +11,8 @@ Gem::Specification.new do |s|
   s.files       = files = Dir.glob("ext/**/*.{h,c,cpp,rb}") +
                   Dir.glob("lib/**/*.rb")
   s.extensions << 'ext/rapngasm/extconf.rb'
+
+  s.add_dependency 'rake-compiler'
+  s.add_dependency 'rice'
 end
 
