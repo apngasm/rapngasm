@@ -51,8 +51,8 @@ Object to_ruby< unsigned char* > (unsigned char* const & x)
 {
   unsigned char* const c = x;
   Array a;
-  for (unsigned int i = 0; i < sizeof(c); i++)
-    a.push(c[i]);
+  for (int i = 0; i < sizeof(c) ; i++)
+    a.push(to_ruby<unsigned char>(c[i]));
   return a;
 }
 
