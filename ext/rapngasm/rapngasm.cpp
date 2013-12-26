@@ -97,11 +97,17 @@ void Init_rapngasm()
 
     define_class<APNGAsm>("APNGAsmSuper")
       .define_constructor(Constructor<APNGAsm>())
-      .define_method("version", &APNGAsm::version)
       .define_method("assemble", &APNGAsm::assemble)
       .define_method("disassemble", &APNGAsm::disassemble)
+      .define_method("load_animation_spec", &APNGAsm::loadAnimationSpec)
+      .define_method("save_pngs", &APNGAsm::savePNGs)
+      .define_method("save_json", &APNGAsm::saveJson)
+      .define_method("save_xml", &APNGAsm::saveXml)
+      //.define_method("set_apngasm_listener", &APNGAsm::setAPNGAsmListener)
+      .define_method("get_frames", &APNGAsm::getFrames)
       .define_method("frame_count", &APNGAsm::frameCount)
-      .define_method("reset", &APNGAsm::reset);
+      .define_method("reset", &APNGAsm::reset)
+      .define_method("version", &APNGAsm::version);
 
     define_class<RAPNGAsm, APNGAsm>("APNGAsm")
       .define_constructor(Constructor<RAPNGAsm>())
