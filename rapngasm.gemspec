@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'rapngasm'
-  s.version     = '1.0.2'
+  s.version     = '3.0.0'
   s.license     = 'libpng/zlib'
   s.summary     = 'apngasm for Ruby'
   s.description = 'Ruby native extension for the apngasm APNG Assembler.'
