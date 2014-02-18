@@ -7,5 +7,5 @@ tmp/
 mkmkf.log
 Makefile
 .DS_Store
-.bundle
+*.bundle
 spec/out/*
