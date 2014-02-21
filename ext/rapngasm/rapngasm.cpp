@@ -19,6 +19,11 @@ namespace apngasm
   class RAPNGAsm : public APNGAsm
   {
     public:
+      APNGAsm initWithFrames(const std::vector<APNGFrame> &frames)
+      {
+        return APNGAsm(frames);
+      }
+
       size_t addFrameFromFrameObject(const APNGFrame &frame)
       {
         return this->addFrame(frame);
@@ -52,8 +57,8 @@ namespace apngasm
       //   return APNGFrame(pixels, width, height, delayNum, delayDen);
       // }
 
-      APNGFrame initWithRgbAndTrns(rgb *pixels, unsigned int width, unsigned int height, rgb *trns_color = NULL,
-                                   unsigned delayNum = DEFAULT_FRAME_NUMERATOR, unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
+      APNGFrame initWithRgbTrns(rgb *pixels, unsigned int width, unsigned int height, rgb *trns_color = NULL,
+                                unsigned delayNum = DEFAULT_FRAME_NUMERATOR, unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
       {
         return APNGFrame(pixels, width, height, trns_color, delayNum, delayDen);
       }
@@ -65,19 +70,24 @@ namespace apngasm
       }
 
       template<typename T>
+      T from_ruby(Object o);
+
+      template<typename T>
       Object to_ruby(T const & x);
   };
 }
 
-// template<>
-// std::vector<APNGFrame> from_ruby<std::vector<APNGFrame> >(Object o)
-// {
-//   Array a(o);
-//   std::vector<APNGFrame> v;
-//   for(Array::iterator ai = a.begin(); ai != a.end(); ++ai)
-//     v.push_back(from_ruby<APNGFrame> (*ai));
-//   return v;
-// }
+template<>
+std::vector<APNGFrame> from_ruby< std::vector<APNGFrame> > (Object o)
+{
+  Array a(o);
+  std::vector<APNGFrame> v;
+  // for (unsigned int i = 0; i < a.size(); i++)
+  //  v.push_back(from_ruby< APNGFrame >(a[i]));
+  for(Array::iterator ai = a.begin(); ai != a.end(); ++ai)
+    v.push_back(from_ruby< APNGFrame >(*ai));
+  return v;
+}
 
 template<>
 Object to_ruby< unsigned char* > (unsigned char* const & x)
@@ -134,7 +144,8 @@ rgb* from_ruby< rgb* > (Object o)
   for (unsigned int i = 0; i < a.size(); i++)
   {
       Array array(a[i]);
-      rgb r = { (int)from_ruby<unsigned char>(array[0]), (int)from_ruby<unsigned char>(array[1]), (int)from_ruby<unsigned char>(array[2]) };
+      rgb r = { (int)from_ruby<unsigned char>(array[0]), (int)from_ruby<unsigned char>(array[1]),
+                (int)from_ruby<unsigned char>(array[2]) };
       rgbArray[i] = r;
   }
   return rgbArray;
@@ -151,10 +162,25 @@ rgba* from_ruby< rgba* > (Object o)
       Array array(a[i]);
       rgba r = { (int)from_ruby<unsigned char>(array[0]), (int)from_ruby<unsigned char>(array[1]),
                  (int)from_ruby<unsigned char>(array[2]), (int)from_ruby<unsigned char>(array[3]) };
-
       rgbaArray[i] = r;
   }
   return rgbaArray;
+}
+
+template<>
+Object to_ruby< unsigned char** > (unsigned char** const & x)
+{
+  unsigned char** const c = x;
+  Array a;
+  for (unsigned int i = 0; i < sizeof(c); i++)
+  {
+    Array array;
+    unsigned char* ch = c[i];
+    for (unsigned int j = 0; j < sizeof(ch); j++)
+      array.push(to_ruby<unsigned char>(ch[j]));
+    a.push(array);
+  }
+  return a;
 }
 
 extern "C"
@@ -162,32 +188,32 @@ void Init_rapngasm()
 {
     define_class<APNGFrame>("APNGFrameSuper")
       .define_constructor(Constructor<APNGFrame>())
-      .define_method("pixels", &APNGFrame::pixels, (Arg("pixels") = NULL))
+      .define_method("pixels", &APNGFrame::pixels, (Arg("pixels") = NULL))      // TODO
       .define_method("width", &APNGFrame::width, (Arg("width") = 0))
       .define_method("height", &APNGFrame::height, (Arg("height") = 0))
       .define_method("color_type", &APNGFrame::colorType, (Arg("color_type") = 255))
-      .define_method("palette", &APNGFrame::palette, (Arg("palette") = NULL))
-      .define_method("transparency", &APNGFrame::transparency, (Arg("transparency") = NULL))
+      .define_method("palette", &APNGFrame::palette, (Arg("palette") = NULL))     // TODO
+      .define_method("transparency", &APNGFrame::transparency, (Arg("transparency") = NULL))      // TODO
       .define_method("palettes_size", &APNGFrame::paletteSize, (Arg("palettes_size") = 0))
       .define_method("transparency_size", &APNGFrame::transparencySize, (Arg("transparency_size") = NULL))
       .define_method("delay_numerator", &APNGFrame::delayNum, (Arg("delay_numerator") = 0))
       .define_method("delay_denominator", &APNGFrame::delayDen, (Arg("delay_denominator") = 0))
       .define_method("rows", &APNGFrame::rows, (Arg("rows") = NULL))      // TODO
-      .define_method("save", &APNGFrame::save, (Arg("save")));
+      .define_method("save", &APNGFrame::save, (Arg("out_path")));
 
     define_class<RAPNGFrame, APNGFrame>("APNGFrame")
       .define_constructor(Constructor<RAPNGFrame>())
-      .define_method("initWithFile", &RAPNGFrame::initWithFile,
-                    (Arg("file_path"), Arg("delay_num") = DEFAULT_FRAME_NUMERATOR, Arg("delay_den") = DEFAULT_FRAME_DENOMINATOR))
-      // .define_method("initWithRgb", &RAPNGFrame::initWithRgb,
+      .define_method("init_with_file", &RAPNGFrame::initWithFile, (Arg("file_path"),
+                     Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR))
+      // .define_method("init_with_rgb", &RAPNGFrame::initWithRgb,
       //               (Arg("pixels"), Arg("width"), Arg("height"),
-      //                Arg("delay_num") = DEFAULT_FRAME_NUMERATOR, Arg("delay_den") = DEFAULT_FRAME_DENOMINATOR))
-      .define_method("initWithRgbAndTrns", &RAPNGFrame::initWithRgbAndTrns,
+      //                Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR))
+      .define_method("init_with_rgb_trns", &RAPNGFrame::initWithRgbTrns,
                     (Arg("pixels"), Arg("width"), Arg("height"), Arg("trns_color") = NULL,
-                     Arg("delay_num") = DEFAULT_FRAME_NUMERATOR, Arg("delay_den") = DEFAULT_FRAME_DENOMINATOR))
-      .define_method("initWithRgba", &RAPNGFrame::initWithRgba,
+                     Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR))
+      .define_method("init_with_rgba", &RAPNGFrame::initWithRgba,
                     (Arg("pixels"), Arg("width"), Arg("height"),
-                     Arg("delay_num") = DEFAULT_FRAME_NUMERATOR, Arg("delay_den") = DEFAULT_FRAME_DENOMINATOR));
+                     Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR));
 
     define_class<APNGAsm>("APNGAsmSuper")
       .define_constructor(Constructor<APNGAsm>())
@@ -205,7 +231,8 @@ void Init_rapngasm()
 
     define_class<RAPNGAsm, APNGAsm>("APNGAsm")
       .define_constructor(Constructor<RAPNGAsm>())
+      .define_method("init_with_frames", &RAPNGAsm::initWithFrames, Arg("frames"))
       .define_method("add_frame", &RAPNGAsm::addFrameFromFrameObject, Arg("frame"))
-      .define_method("add_frame_from_file", &RAPNGAsm::addFrameFromFile, 
-                    (Arg("filePath"), Arg("delayNum") = DEFAULT_FRAME_NUMERATOR, Arg("delayDen") = DEFAULT_FRAME_DENOMINATOR));
+      .define_method("add_frame_from_file", &RAPNGAsm::addFrameFromFile, (Arg("file_path"),
+                     Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR));
 }
