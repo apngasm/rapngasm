@@ -7,6 +7,8 @@
 #include "rice/Constructor.hpp"
 #include "rice/String.hpp"
 #include "rice/Array.hpp"
+#include "rice/Hash.hpp"
+#include "rice/Symbol.hpp"
 #include <iostream>
 
 using namespace Rice;
@@ -76,24 +78,82 @@ unsigned char* from_ruby< unsigned char* > (Object o)
   return c;
 }
 
+template<>
+Object to_ruby< rgb* > (rgb* const & x)
+{
+  rgb* const r = x;
+  Array a;
+  for (unsigned int i = 0; i < sizeof(r); i++)
+  {
+    Hash h;
+    h[ Symbol("r") ] = to_ruby<unsigned char>(r[i].r);
+    h[ Symbol("g") ] = to_ruby<unsigned char>(r[i].g);
+    h[ Symbol("b") ] = to_ruby<unsigned char>(r[i].b);
+    a.push(to_ruby<Hash>(h));
+  }
+  return a;
+}
+
+template<>
+rgb* from_ruby< rgb* > (Object o)
+{ 
+  Array a(o);
+  rgb* rgbArray = (rgb*)malloc(a.size());
+
+  for (unsigned int i = 0; i < a.size(); i++)
+  {
+      Hash h = (Hash)a[i];
+      rgb r = { (int)from_ruby<unsigned char>(h[Symbol("r")]), (int)from_ruby<unsigned char>(h[Symbol("g")]),
+                (int)from_ruby<unsigned char>(h[Symbol("b")]) };
+      rgbArray[i] = r;
+  }
+  return rgbArray;
+}
+
+template<>
+rgba* from_ruby< rgba* > (Object o)
+{ 
+  Array a(o);
+  rgba* rgbaArray = (rgba*)malloc(a.size());
+
+  for (unsigned int i = 0; i < a.size(); i++)
+  {
+      Hash h = (Hash)a[i];
+      rgba r = { (int)from_ruby<unsigned char>(h[Symbol("r")]), (int)from_ruby<unsigned char>(h[Symbol("g")]),
+                 (int)from_ruby<unsigned char>(h[Symbol("b")]), (int)from_ruby<unsigned char>(h[Symbol("a")]) };
+      rgbaArray[i] = r;
+  }
+  return rgbaArray;
+}
+
 extern "C"
 void Init_rapngasm()
 {
     define_class<APNGFrame>("APNGFrame")
       //.define_constructor(Constructor<APNGFrame>())
       .define_constructor(Constructor<APNGFrame, const std::string, unsigned, unsigned>(),
-                         (Arg("file_path"), Arg("delay_num") = DEFAULT_FRAME_NUMERATOR, Arg("dela_den") = DEFAULT_FRAME_DENOMINATOR))
+                        (Arg("file_path"), Arg("delay_num") = DEFAULT_FRAME_NUMERATOR, Arg("dela_den") = DEFAULT_FRAME_DENOMINATOR))
+      // .define_constructor(Constructor<APNGFrame, rgb*, unsigned int, unsigned int, unsigned, unsigned>(),
+      //                    (Arg("pixels"), Arg("width"), Arg("height"),
+      //                     Arg("delay_num") = DEFAULT_FRAME_NUMERATOR, Arg("dela_den") = DEFAULT_FRAME_DENOMINATOR))
+      // .define_constructor(Constructor<APNGFrame, rgb*, unsigned int, unsigned int, rgb*, unsigned, unsigned>(),
+      //                    (Arg("pixels"), Arg("width"), Arg("height"), Arg("trns_color") = NULL,
+      //                     Arg("delay_num") = DEFAULT_FRAME_NUMERATOR, Arg("dela_den") = DEFAULT_FRAME_DENOMINATOR))
+      // .define_constructor(Constructor<APNGFrame, rgba*, unsigned int, unsigned int, unsigned, unsigned>(),
+      //                    (Arg("pixels"), Arg("width"), Arg("height"),
+      //                     Arg("delay_num") = DEFAULT_FRAME_NUMERATOR, Arg("dela_den") = DEFAULT_FRAME_DENOMINATOR))
       .define_method("pixels", &APNGFrame::pixels, (Arg("pixels") = NULL))
       .define_method("width", &APNGFrame::width, (Arg("width") = 0))
       .define_method("height", &APNGFrame::height, (Arg("height") = 0))
       .define_method("color_type", &APNGFrame::colorType, (Arg("color_type") = 255))
-      // .define_method("palette", &APNGFrame::palette, (Arg("palette") = NULL))
+      .define_method("palette", &APNGFrame::palette, (Arg("palette") = NULL))
       .define_method("transparency", &APNGFrame::transparency, (Arg("transparency") = NULL))
       .define_method("palettes_size", &APNGFrame::paletteSize, (Arg("palettes_size") = 0))
       .define_method("transparency_size", &APNGFrame::transparencySize, (Arg("transparency_size") = NULL))
       .define_method("delay_numerator", &APNGFrame::delayNum, (Arg("delay_numerator") = 0))
-      .define_method("delay_denominator", &APNGFrame::delayDen, (Arg("delay_denominator") = 0));
-      // .define_method("rows", &APNGFrame::rows, (Arg("rows") = NULL));
+      .define_method("delay_denominator", &APNGFrame::delayDen, (Arg("delay_denominator") = 0))
+      .define_method("rows", &APNGFrame::rows, (Arg("rows") = NULL))
+      .define_method("save", &APNGFrame::save, (Arg("save")));
 
     define_class<APNGAsm>("APNGAsmSuper")
       .define_constructor(Constructor<APNGAsm>())
