@@ -92,10 +92,16 @@ std::vector<APNGFrame> from_ruby< std::vector<APNGFrame> > (Object o)
 template<>
 Object to_ruby< unsigned char* > (unsigned char* const & x)
 {
-  unsigned char* const c = x;
+  unsigned char c[48*48*3];
+  memcpy(c, x, 48*48*3);
+  int size = sizeof(c) / sizeof(c[0]);
   Array a;
-  for (unsigned int i = 0; i < sizeof(c) ; i++)
+  for (unsigned int i = 0; i < size; i++)
     a.push(to_ruby<unsigned char>(c[i]));
+  // unsigned char* const c = x;
+  // Array a;
+  // for (unsigned int i = 0; i < sizeof(c) ; i++)
+  //   a.push(to_ruby<unsigned char>(c[i]));
   return a;
 }
 
@@ -122,16 +128,27 @@ unsigned char* from_ruby< unsigned char* > (Object o)
 template<>
 Object to_ruby< rgb* > (rgb* const & x)
 {
-  rgb* const r = x;
+  rgb newRgb[256];
+  memcpy(newRgb, x, 256);
   Array a;
-  for (unsigned int i = 0; i < sizeof(r); i++)
+  for (unsigned int i = 0; i < 256; i++)
   {
     Array array;
-    array.push(to_ruby<unsigned char>(r[i].r));
-    array.push(to_ruby<unsigned char>(r[i].g));
-    array.push(to_ruby<unsigned char>(r[i].b));
+    array.push(to_ruby<unsigned char>(newRgb[i].r));
+    array.push(to_ruby<unsigned char>(newRgb[i].g));
+    array.push(to_ruby<unsigned char>(newRgb[i].b));
     a.push(array);
   }
+  // rgb* const r = x;
+  // Array a;
+  // for (unsigned int i = 0; i < sizeof(r); i++)
+  // {
+  //   Array array;
+  //   array.push(to_ruby<unsigned char>(r[i].r));
+  //   array.push(to_ruby<unsigned char>(r[i].g));
+  //   array.push(to_ruby<unsigned char>(r[i].b));
+  //   a.push(array);
+  // }
   return a;
 }
 
@@ -144,8 +161,8 @@ rgb* from_ruby< rgb* > (Object o)
   for (unsigned int i = 0; i < a.size(); i++)
   {
       Array array(a[i]);
-      rgb r = { (int)from_ruby<unsigned char>(array[0]), (int)from_ruby<unsigned char>(array[1]),
-                (int)from_ruby<unsigned char>(array[2]) };
+      rgb r = { from_ruby<unsigned char>(array[0]), from_ruby<unsigned char>(array[1]),
+                from_ruby<unsigned char>(array[2]) };
       rgbArray[i] = r;
   }
   return rgbArray;
@@ -160,8 +177,8 @@ rgba* from_ruby< rgba* > (Object o)
   for (unsigned int i = 0; i < a.size(); i++)
   {
       Array array(a[i]);
-      rgba r = { (int)from_ruby<unsigned char>(array[0]), (int)from_ruby<unsigned char>(array[1]),
-                 (int)from_ruby<unsigned char>(array[2]), (int)from_ruby<unsigned char>(array[3]) };
+      rgba r = { from_ruby<unsigned char>(array[0]), from_ruby<unsigned char>(array[1]),
+                 from_ruby<unsigned char>(array[2]), from_ruby<unsigned char>(array[3]) };
       rgbaArray[i] = r;
   }
   return rgbaArray;
