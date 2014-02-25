@@ -19,10 +19,41 @@ namespace apngasm
   class RAPNGAsm : public APNGAsm
   {
     public:
-      APNGAsm initWithFrames(const std::vector<APNGFrame> &frames)
+      APNGAsm initWithFrames(Array a)
       {
+        std::vector<APNGFrame> frames;
+        for (int i = 0; i < a.size(); i++)
+        {
+          //Object obj = a[i];
+          Data_Object<APNGFrame> obj(a[i]);
+          //APNGFrame * f = from_ruby<APNGFrame *>(obj);
+          //APNGFrame const * f = from_ruby<APNGFrame const *>(obj);
+          std::cout << "frame:" << i << std::endl;
+          APNGFrame frame = from_ruby<APNGFrame>(a[i]);
+          frames.push_back(from_ruby<APNGFrame>(obj));
+          std::cout << "frame in" << std::endl;
+        }
+        
+        // for(Array::iterator ai = a.begin(); ai != a.end(); ++ai)
+        // {
+        //   std::cout << "frame:" << a.size() << std::endl;
+        //   //APNGFrame frame = *ai;
+        //   std::cout << "frame:" << a.size() << std::endl;
+        //   frames.push_back(from_ruby<APNGFrame>(*ai));
+        //   std::cout << "frame in" << std::endl;
+        // }
         return APNGAsm(frames);
       }
+
+      // std::vector<APNGFrame> convert(Rice::Object x) {
+      //   Rice::Array a(x);
+      //   std::vector<APNGFrame> result;
+      //   result.reserve(a.size());
+      //   for (Rice::Array::iterator it = a.begin(); it != a.end(); ++it) {
+      //     result.push_back(from_ruby<APNGFrame>(*it));
+      //   }
+      //   return result;
+      //   }
 
       size_t addFrameFromFrameObject(const APNGFrame &frame)
       {
@@ -80,6 +111,7 @@ namespace apngasm
 template<>
 std::vector<APNGFrame> from_ruby< std::vector<APNGFrame> > (Object o)
 {
+  std::cout << "from_ruby< std::vector<APNGFrame> >" << std::endl;
   Array a(o);
   std::vector<APNGFrame> v;
   // for (unsigned int i = 0; i < a.size(); i++)
@@ -89,21 +121,21 @@ std::vector<APNGFrame> from_ruby< std::vector<APNGFrame> > (Object o)
   return v;
 }
 
-template<>
-Object to_ruby< unsigned char* > (unsigned char* const & x)
-{
-  unsigned char c[48*48*3];
-  memcpy(c, x, 48*48*3);
-  int size = sizeof(c) / sizeof(c[0]);
-  Array a;
-  for (unsigned int i = 0; i < size; i++)
-    a.push(to_ruby<unsigned char>(c[i]));
-  // unsigned char* const c = x;
-  // Array a;
-  // for (unsigned int i = 0; i < sizeof(c) ; i++)
-  //   a.push(to_ruby<unsigned char>(c[i]));
-  return a;
-}
+// template<>
+// Object to_ruby< unsigned char* > (unsigned char* const & x)
+// {
+//   unsigned char c[48*48*3];
+//   memcpy(c, x, 48*48*3);
+//   int size = sizeof(c) / sizeof(c[0]);
+//   Array a;
+//   for (unsigned int i = 0; i < size; i++)
+//     a.push(to_ruby<unsigned char>(c[i]));
+//   // unsigned char* const c = x;
+//   // Array a;
+//   // for (unsigned int i = 0; i < sizeof(c) ; i++)
+//   //   a.push(to_ruby<unsigned char>(c[i]));
+//   return a;
+// }
 
 template<>
 Object to_ruby< std::vector<APNGFrame> > (std::vector<APNGFrame> const & x)
@@ -116,57 +148,78 @@ Object to_ruby< std::vector<APNGFrame> > (std::vector<APNGFrame> const & x)
 }
 
 template<>
-unsigned char* from_ruby< unsigned char* > (Object o)
+Object to_ruby< std::vector<unsigned char> > (std::vector<unsigned char> const & x)
 {
-  Array a(o);
-  unsigned char* c = (unsigned char*)malloc(a.size());
-  for (unsigned int i = 0; i < a.size(); i++)
-    c[i] = from_ruby<unsigned char>(a[i]);
-  return c;
-}
-
-template<>
-Object to_ruby< rgb* > (rgb* const & x)
-{
-  rgb newRgb[256];
-  memcpy(newRgb, x, 256);
+  std::vector<unsigned char> v = x;
   Array a;
-  for (unsigned int i = 0; i < 256; i++)
-  {
-    Array array;
-    array.push(to_ruby<unsigned char>(newRgb[i].r));
-    array.push(to_ruby<unsigned char>(newRgb[i].g));
-    array.push(to_ruby<unsigned char>(newRgb[i].b));
-    a.push(array);
-  }
-  // rgb* const r = x;
-  // Array a;
-  // for (unsigned int i = 0; i < sizeof(r); i++)
-  // {
-  //   Array array;
-  //   array.push(to_ruby<unsigned char>(r[i].r));
-  //   array.push(to_ruby<unsigned char>(r[i].g));
-  //   array.push(to_ruby<unsigned char>(r[i].b));
-  //   a.push(array);
-  // }
+  for (std::vector<unsigned char>::iterator vi = v.begin(); vi != v.end(); ++vi)
+    a.push(to_ruby<unsigned char> (*vi));
   return a;
 }
 
 template<>
-rgb* from_ruby< rgb* > (Object o)
-{ 
+std::vector<unsigned char> from_ruby< std::vector<unsigned char> > (Object o)
+{
+  std::cout << "in" << std::endl;
   Array a(o);
-  rgb* rgbArray = (rgb*)malloc(a.size());
-
-  for (unsigned int i = 0; i < a.size(); i++)
-  {
-      Array array(a[i]);
-      rgb r = { from_ruby<unsigned char>(array[0]), from_ruby<unsigned char>(array[1]),
-                from_ruby<unsigned char>(array[2]) };
-      rgbArray[i] = r;
-  }
-  return rgbArray;
+  std::vector<unsigned char> v;
+  for (Array::iterator ai = a.begin(); ai != a.end(); ++ai)
+    v.push_back(from_ruby<unsigned char> (*ai));
+  return v;
 }
+
+// template<>
+// unsigned char* from_ruby< unsigned char* > (Object o)
+// {
+//   Array a(o);
+//   unsigned char* c = (unsigned char*)malloc(a.size());
+//   for (unsigned int i = 0; i < a.size(); i++)
+//     c[i] = from_ruby<unsigned char>(a[i]);
+//   return c;
+// }
+
+// template<>
+// Object to_ruby< rgb* > (rgb* const & x)
+// {
+//   rgb newRgb[256];
+//   memcpy(newRgb, x, 256);
+//   Array a;
+//   for (unsigned int i = 0; i < 256; i++)
+//   {
+//     Array array;
+//     array.push(to_ruby<unsigned char>(newRgb[i].r));
+//     array.push(to_ruby<unsigned char>(newRgb[i].g));
+//     array.push(to_ruby<unsigned char>(newRgb[i].b));
+//     a.push(array);
+//   }
+//   // rgb* const r = x;
+//   // Array a;
+//   // for (unsigned int i = 0; i < sizeof(r); i++)
+//   // {
+//   //   Array array;
+//   //   array.push(to_ruby<unsigned char>(r[i].r));
+//   //   array.push(to_ruby<unsigned char>(r[i].g));
+//   //   array.push(to_ruby<unsigned char>(r[i].b));
+//   //   a.push(array);
+//   // }
+//   return a;
+// }
+
+// template<>
+// rgb* from_ruby< rgb* > (Object o)
+// { 
+//   Array a(o);
+//   rgb* rgbArray = (rgb*)malloc(a.size());
+
+//   for (unsigned int i = 0; i < a.size(); i++)
+//   {
+//       Array array(a[i]);
+//       rgb r = { from_ruby<unsigned char>(array[0]), from_ruby<unsigned char>(array[1]),
+//                 from_ruby<unsigned char>(array[2]) };
+//       rgbArray[i] = r;
+//   }
+//   return rgbArray;
+// }
 
 template<>
 rgba* from_ruby< rgba* > (Object o)
@@ -184,38 +237,38 @@ rgba* from_ruby< rgba* > (Object o)
   return rgbaArray;
 }
 
-template<>
-Object to_ruby< unsigned char** > (unsigned char** const & x)
-{
-  unsigned char** const c = x;
-  Array a;
-  for (unsigned int i = 0; i < sizeof(c); i++)
-  {
-    Array array;
-    unsigned char* ch = c[i];
-    for (unsigned int j = 0; j < sizeof(ch); j++)
-      array.push(to_ruby<unsigned char>(ch[j]));
-    a.push(array);
-  }
-  return a;
-}
+// template<>
+// Object to_ruby< unsigned char** > (unsigned char** const & x)
+// {
+//   unsigned char** const c = x;
+//   Array a;
+//   for (unsigned int i = 0; i < sizeof(c); i++)
+//   {
+//     Array array;
+//     unsigned char* ch = c[i];
+//     for (unsigned int j = 0; j < sizeof(ch); j++)
+//       array.push(to_ruby<unsigned char>(ch[j]));
+//     a.push(array);
+//   }
+//   return a;
+// }
 
 extern "C"
 void Init_rapngasm()
 {
     define_class<APNGFrame>("APNGFrameSuper")
       .define_constructor(Constructor<APNGFrame>())
-      .define_method("pixels", &APNGFrame::pixels, (Arg("pixels") = NULL))      // TODO
+      .define_method("pixels", &APNGFrame::pixelsForRuby, (Arg("pixels") = new std::vector<unsigned char>))      // TODO
       .define_method("width", &APNGFrame::width, (Arg("width") = 0))
       .define_method("height", &APNGFrame::height, (Arg("height") = 0))
       .define_method("color_type", &APNGFrame::colorType, (Arg("color_type") = 255))
-      .define_method("palette", &APNGFrame::palette, (Arg("palette") = NULL))     // TODO
-      .define_method("transparency", &APNGFrame::transparency, (Arg("transparency") = NULL))      // TODO
+      //.define_method("palette", &APNGFrame::palette, (Arg("palette") = NULL))     // TODO
+      //.define_method("transparency", &APNGFrame::transparency, (Arg("transparency") = NULL))      // TODO
       .define_method("palettes_size", &APNGFrame::paletteSize, (Arg("palettes_size") = 0))
       .define_method("transparency_size", &APNGFrame::transparencySize, (Arg("transparency_size") = NULL))
       .define_method("delay_numerator", &APNGFrame::delayNum, (Arg("delay_numerator") = 0))
       .define_method("delay_denominator", &APNGFrame::delayDen, (Arg("delay_denominator") = 0))
-      .define_method("rows", &APNGFrame::rows, (Arg("rows") = NULL))      // TODO
+      //.define_method("rows", &APNGFrame::rows, (Arg("rows") = NULL))      // TODO
       .define_method("save", &APNGFrame::save, (Arg("out_path")));
 
     define_class<RAPNGFrame, APNGFrame>("APNGFrame")
