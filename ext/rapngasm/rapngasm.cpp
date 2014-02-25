@@ -19,18 +19,20 @@ namespace apngasm
   class RAPNGAsm : public APNGAsm
   {
     public:
-      APNGAsm initWithFrames(Array a)
+      APNGAsm initWithFrames(const Array a)
       {
         std::vector<APNGFrame> frames;
         for (int i = 0; i < a.size(); i++)
         {
+          std::cout << "frame0:" << i << std::endl;
           //Object obj = a[i];
           Data_Object<APNGFrame> obj(a[i]);
           //APNGFrame * f = from_ruby<APNGFrame *>(obj);
+          //APNGFrame a = 
           //APNGFrame const * f = from_ruby<APNGFrame const *>(obj);
           std::cout << "frame:" << i << std::endl;
-          APNGFrame frame = from_ruby<APNGFrame>(a[i]);
-          frames.push_back(from_ruby<APNGFrame>(obj));
+          //APNGFrame frame = from_ruby<APNGFrame>(a[i]);
+          //frames.push_back(*f);
           std::cout << "frame in" << std::endl;
         }
         
@@ -222,6 +224,18 @@ std::vector<unsigned char> from_ruby< std::vector<unsigned char> > (Object o)
 // }
 
 template<>
+Object to_ruby< std::vector<rgb> > (std::vector<rgb> const & x)
+{
+  std::vector<rgb> v = x;
+  Array a;
+  std::cout << "test:" << x.size() << std::endl;
+  for (std::vector<rgb>::iterator vi = v.begin(); vi != v.end(); ++vi)
+    a.push(*vi);
+  return a;
+
+}
+
+template<>
 rgba* from_ruby< rgba* > (Object o)
 { 
   Array a(o);
@@ -262,13 +276,13 @@ void Init_rapngasm()
       .define_method("width", &APNGFrame::width, (Arg("width") = 0))
       .define_method("height", &APNGFrame::height, (Arg("height") = 0))
       .define_method("color_type", &APNGFrame::colorType, (Arg("color_type") = 255))
-      //.define_method("palette", &APNGFrame::palette, (Arg("palette") = NULL))     // TODO
-      //.define_method("transparency", &APNGFrame::transparency, (Arg("transparency") = NULL))      // TODO
+      .define_method("palette", &APNGFrame::paletteForRuby, (Arg("palette") = new std::vector<rgb>))     // TODO
+      .define_method("transparency", &APNGFrame::transparencyForRuby, (Arg("transparency") = new std::vector<unsigned char>))  // TODO
       .define_method("palettes_size", &APNGFrame::paletteSize, (Arg("palettes_size") = 0))
       .define_method("transparency_size", &APNGFrame::transparencySize, (Arg("transparency_size") = NULL))
       .define_method("delay_numerator", &APNGFrame::delayNum, (Arg("delay_numerator") = 0))
       .define_method("delay_denominator", &APNGFrame::delayDen, (Arg("delay_denominator") = 0))
-      //.define_method("rows", &APNGFrame::rows, (Arg("rows") = NULL))      // TODO
+      .define_method("rows", &APNGFrame::rowsForRuby, (Arg("rows") = new std::vector<unsigned char*>))      // TODO
       .define_method("save", &APNGFrame::save, (Arg("out_path")));
 
     define_class<RAPNGFrame, APNGFrame>("APNGFrame")
