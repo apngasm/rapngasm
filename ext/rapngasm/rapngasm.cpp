@@ -14,8 +14,6 @@
 using namespace Rice;
 using namespace apngasm;
 
-namespace apngasm
-{
   class RAPNGAsm : public APNGAsm
   {
     public:
@@ -25,11 +23,14 @@ namespace apngasm
         std::cout << "init" << std::endl;
         std::vector<APNGFrame> frames;// = from_ruby< std::vector<APNGFrame> >(a);
 
+
+
         for (int i = 0; i < a.size(); i++)
         {
-          std::cout << "frame0:" << a[i].inspect() << std::endl;
+          std::cout << "frame0:" << a[i].class_of() << std::endl;
 
-          //frames.push_back(a[i]);
+          // APNGFrame frame = convert(a[i]);
+          //frames.push_back(frame);
           std::cout << "frame in" << std::endl;
         }
 
@@ -100,6 +101,15 @@ namespace apngasm
 }
 
 template<>
+APNGFrame from_ruby< APNGFrame > (Object o)
+{
+  std::cout << "apngasm::APNGFrame" << std::endl;
+  const Array a(o);
+  APNGFrame frame;// = reinterpret_cast<APNGFrame>(a[0].value());
+  return frame;
+} 
+
+template<>
 std::vector<APNGFrame> from_ruby< std::vector<APNGFrame> > (Object o)
 {
   std::cout << "from_ruby< std::vector<APNGFrame> >" << std::endl;
@@ -147,6 +157,7 @@ template<>
 unsigned char* from_ruby< unsigned char* > (Object o)
 {
   Array a(o);
+  std::cout << "size = " << a.size() << std::endl;
   unsigned char* c = (unsigned char*)malloc(a.size());
   //unsigned char c[a.size()];
   //std::cout << "size:" << sizeof(c) / sizeof(c[0]) << std::endl;
@@ -244,7 +255,7 @@ rgba* from_ruby< rgba* > (Object o)
 extern "C"
 void Init_rapngasm()
 {
-    define_class<APNGFrame>("APNGFrameSuper")
+    define_class<APNGFrame>("APNGFrame")
       .define_constructor(Constructor<APNGFrame>())
       .define_method("pixels", &APNGFrame::pixelsForRuby, (Arg("pixels") = new std::vector<unsigned char>))      // TODO
       .define_method("width", &APNGFrame::width, (Arg("width") = 0))
@@ -259,7 +270,7 @@ void Init_rapngasm()
       .define_method("rows", &APNGFrame::rowsForRuby, (Arg("rows") = new std::vector<unsigned char*>))      // TODO
       .define_method("save", &APNGFrame::save, (Arg("out_path")));
 
-    define_class<RAPNGFrame, APNGFrame>("APNGFrame")
+    define_class<RAPNGFrame, APNGFrame>("APNGFrameAdapter")
       .define_constructor(Constructor<RAPNGFrame>())
       .define_method("init_with_file", &RAPNGFrame::initWithFile, (Arg("file_path"),
                      Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR))
