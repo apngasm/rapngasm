@@ -5,7 +5,6 @@
 #include "rice/Class.hpp"
 #include "rice/Constructor.hpp"
 #include "rice/Array.hpp"
-#include <iostream>
 
 using namespace Rice;
 using namespace apngasm;
@@ -14,10 +13,10 @@ class Converter
 {
   public:
     Converter(){}
-  static std::vector<APNGFrame> convertAPNGFrames(Array a);
+    static std::vector<APNGFrame> convertToAPNGFrames(Array a);
 };
 
-std::vector<APNGFrame> Converter::convertAPNGFrames(const Array a)
+std::vector<APNGFrame> Converter::convertToAPNGFrames(const Array a)
 { 
   std::vector<APNGFrame> vec;
   for (int i = 0; i < a.size(); i++)
@@ -36,7 +35,7 @@ namespace apngasm
 
       RAPNGAsm initWithFrames(const Array a)
       {
-        std::vector<APNGFrame> frames = Converter::convertAPNGFrames(a);
+        std::vector<APNGFrame> frames = Converter::convertToAPNGFrames(a);
 
         return RAPNGAsm(frames);
       }
@@ -104,7 +103,7 @@ Object to_ruby< std::vector<APNGFrame> > (std::vector<APNGFrame> const & x)
     a.push(to_ruby<APNGFrame> (*vi));
 
   return a;
-}d
+}
 
 template<>
 rgb* from_ruby< rgb* > (Object o)
@@ -121,25 +120,6 @@ rgb* from_ruby< rgb* > (Object o)
   }
 
   return rgbArray;
-}
-
-template<>
-Object to_ruby< rgb* > (rgb* const & x)
-{
-  rgb newRgb[256];
-  memcpy(newRgb, x, 256);
-  Array a;
-
-  for (int i = 0; i < 256; i++)
-  {
-    Array array;
-    array.push(to_ruby<unsigned char>(newRgb[i].r));
-    array.push(to_ruby<unsigned char>(newRgb[i].g));
-    array.push(to_ruby<unsigned char>(newRgb[i].b));
-    a.push(array);
-  }
-
-  return a;
 }
 
 template<>
