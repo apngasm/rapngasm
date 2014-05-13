@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.email       = 'zero@genshin.org'
   s.homepage    = 'http://www.github.com/apngasm/rapngasm'
 
-  s.files       = files = Dir.glob("ext/**/*.{h,c,cpp,rb}") +
-                  Dir.glob("lib/**/*.rb")
+  s.files       = Dir.glob('ext/**/*.{h,c,cpp,rb}') +
+                  Dir.glob('lib/**/*.rb')
   s.extensions << 'ext/rapngasm/extconf.rb'
 
-  s.add_dependency 'rake-compiler'
-  s.add_dependency 'rice'
+  s.add_dependency 'rake-compiler', '~> 0.9', '~> 0.9.2'
+  s.add_dependency 'rice', '~> 1.6', '~> 1.6.2'
 end

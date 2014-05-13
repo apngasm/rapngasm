@@ -1,2 +1,14 @@
 GlobalVars:
   Enabled: false # catches on extconf, which needs globals
+
+AsciiIdentifiers:
+  Enabled: false
+
+AsciiComments:
+  Enabled: false
+
+AccessorMethodName:
+  Enabled: false
+
+LineLength:
+  Max: 99

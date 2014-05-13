@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rake-compiler'
-gem 'rice', '~> 1.6.0'
+gemspec
 
 group :development do
   gem 'libnotify'
