@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name        = 'rapngasm'
-  s.version     = '3.0.0'
+  s.version     = '3.1.0'
   s.license     = 'libpng/zlib'
   s.summary     = 'apngasm for Ruby'
   s.description = 'Ruby native extension for the apngasm APNG Assembler.'
-  s.authors     = ['Rei Kagetsuki']
+  s.authors     = ['Rei Kagetsuki', 'Rika Yoshida']
   s.email       = 'zero@genshin.org'
   s.homepage    = 'http://www.github.com/apngasm/rapngasm'
 
@@ -15,4 +15,3 @@ Gem::Specification.new do |s|
   s.add_dependency 'rake-compiler'
   s.add_dependency 'rice'
 end
-
