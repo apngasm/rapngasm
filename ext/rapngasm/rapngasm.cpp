@@ -51,38 +51,16 @@ namespace apngasm
         return this->addFrame(filePath, delayNum, delayDen);
       }
 
-      template<typename T>
-      T from_ruby(Object o);
-
-      template<typename T>
-      Object to_ruby(T const & x);
-  };
-
-  class RAPNGFrame : public APNGFrame
-  {
-    public:
-      APNGFrame initWithFile(const std::string &filePath,
+      size_t addFrameFromRGB(rgb *pixels, unsigned int width, unsigned int height, rgb *trns_color = NULL,
                              unsigned delayNum = DEFAULT_FRAME_NUMERATOR, unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
       {
-        return APNGFrame(filePath, delayNum, delayDen);
+        return this->addFrame(pixels, width, height, trns_color, delayNum, delayDen);
       }
 
-      // APNGFrame initWithRgb(rgb *pixels, unsigned int width, unsigned int height,
-      //                       unsigned delayNum = DEFAULT_FRAME_NUMERATOR, unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
-      // {
-      //   return APNGFrame(pixels, width, height, delayNum, delayDen);
-      // }
-
-      APNGFrame initWithRgbTrns(rgb *pixels, unsigned int width, unsigned int height, rgb *trns_color = NULL,
-                                unsigned delayNum = DEFAULT_FRAME_NUMERATOR, unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
-      {
-        return APNGFrame(pixels, width, height, trns_color, delayNum, delayDen);
-      }
-
-      APNGFrame initWithRgba(rgba *pixels, unsigned int width, unsigned int height,
+      size_t addFrameFromRGBA(rgba *pixels, unsigned int width, unsigned int height,
                              unsigned delayNum = DEFAULT_FRAME_NUMERATOR, unsigned delayDen = DEFAULT_FRAME_DENOMINATOR)
       {
-        return APNGFrame(pixels, width, height, delayNum, delayDen);
+        return this->addFrame(pixels, width, height, delayNum, delayDen);
       }
 
       template<typename T>
@@ -157,20 +135,6 @@ void Init_rapngasm()
       //.define_method("rows", &APNGFrame::rows, (Arg("rows") = NULL))
       .define_method("save", &APNGFrame::save, (Arg("out_path")));
 
-    define_class<RAPNGFrame, APNGFrame>("APNGFrameGenerator")
-      .define_constructor(Constructor<RAPNGFrame>())
-      .define_method("init_with_file", &RAPNGFrame::initWithFile, (Arg("file_path"),
-                     Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR))
-      // .define_method("init_with_rgb", &RAPNGFrame::initWithRgb,
-      //               (Arg("pixels"), Arg("width"), Arg("height"),
-      //                Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR))
-      .define_method("init_with_rgb_trns", &RAPNGFrame::initWithRgbTrns,
-                    (Arg("pixels"), Arg("width"), Arg("height"), Arg("trns_color") = NULL,
-                     Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR))
-      .define_method("init_with_rgba", &RAPNGFrame::initWithRgba,
-                    (Arg("pixels"), Arg("width"), Arg("height"),
-                     Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR));
-
     define_class<APNGAsm>("APNGAsmSuper")
       .define_constructor(Constructor<APNGAsm>())
       .define_method("assemble", &APNGAsm::assemble)
@@ -187,8 +151,14 @@ void Init_rapngasm()
 
     define_class<RAPNGAsm, APNGAsm>("APNGAsm")
       .define_constructor(Constructor<RAPNGAsm>())
-      .define_method("init_with_frames", &RAPNGAsm::initWithFrames, Arg("frames"))
+      // .define_method("init_with_frames", &RAPNGAsm::initWithFrames, Arg("frames"))
       .define_method("add_frame", &RAPNGAsm::addFrameFromFrameObject, Arg("frame"))
       .define_method("add_frame_from_file", &RAPNGAsm::addFrameFromFile, (Arg("file_path"),
-                     Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR));
+                     Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR))
+      .define_method("add_frame_from_rgb", &RAPNGAsm::addFrameFromRGB,
+                     (Arg("pixels"), Arg("width"), Arg("height"), Arg("trns_color") = NULL,
+                      Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR))
+      .define_method("add_frame_from_rgba", &RAPNGAsm::addFrameFromRGBA,
+                     (Arg("pixels"), Arg("width"), Arg("height"),
+                      Arg("delay_numerator") = DEFAULT_FRAME_NUMERATOR, Arg("delay_denominator") = DEFAULT_FRAME_DENOMINATOR));
 }
