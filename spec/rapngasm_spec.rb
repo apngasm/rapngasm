@@ -6,7 +6,7 @@ describe 'APNGAsm'  do
   end
 
   let(:apngframe) do
-    APNGFrame.new('./spec/support/apngasm.png', 100, 1000)
+    APNGFrame.new
   end
 
   describe 'APNGAsm.new' do
@@ -17,7 +17,7 @@ describe 'APNGAsm'  do
 
   describe 'APNGFrame.new' do
     it 'creates an APNG Frame object' do
-      expect apngframe.to be_an_instance_of(APNGFrame)
+      expect(apngframe).to be_an_instance_of(APNGFrame)
     end
   end
 
@@ -27,12 +27,31 @@ describe 'APNGAsm'  do
     end
   end
 
-  describe '.add_frame"' do
+  describe '.add_frame' do
     it 'add an APNGFrame object into apngasm' do
       apngasm.add_frame(apngframe)
-      frame_num = apngasm.add_frame_from_file(
-        './spec/support/apngasm.png', 100, 1000)
-      expect(frame_num).to eq(2)
+      frame_count = apngasm.add_frame_from_file('./spec/support/test1.png', 100, 1000)
+      expect(frame_count).to eq(2)
+    end
+  end
+
+  describe '.add_frame_from_rgb' do
+    it 'add an APNGFrame object made ​​from rgb data into apngasm' do
+      rgb = [[0, 0, 0], [0, 0, 0], [0, 0, 0],
+             [128, 128, 128], [128, 128, 128], [128, 128, 128],
+             [255, 255, 255], [255, 255, 255], [255, 255, 255]]
+      frame_count = apngasm.add_frame_from_rgb(rgb, 3, 3)
+      expect(frame_count).to eq(1)
+    end
+  end
+
+  describe '.add_frame_from_rgba' do
+    it 'add an APNGFrame object made ​​from rgba data into apngasm' do
+      rgba = [[0, 0, 0, 0], [0, 0, 0, 128], [0, 0, 0, 255],
+              [128, 128, 128, 0], [128, 128, 128, 128], [128, 128, 128, 255],
+              [255, 255, 255, 0], [255, 255, 255, 128], [255, 255, 255, 255]]
+      frame_count = apngasm.add_frame_from_rgba(rgba, 3, 3)
+      expect(frame_count).to eq(1)
     end
   end
 
