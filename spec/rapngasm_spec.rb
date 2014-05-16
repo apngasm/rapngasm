@@ -29,29 +29,42 @@ describe 'APNGAsm'  do
 
   describe '.add_frame' do
     it 'add an APNGFrame object into apngasm' do
-      apngasm.add_frame(apngframe)
-      frame_count = apngasm.add_frame_from_file('./spec/support/test1.png', 100, 1000)
-      expect(frame_count).to eq(2)
+      expect(apngasm.add_frame(apngframe)).to eq(1)
     end
   end
 
-  describe '.add_frame_from_rgb' do
-    it 'add an APNGFrame object made ​​from rgb data into apngasm' do
-      rgb = [[0, 0, 0], [0, 0, 0], [0, 0, 0],
-             [128, 128, 128], [128, 128, 128], [128, 128, 128],
-             [255, 255, 255], [255, 255, 255], [255, 255, 255]]
-      frame_count = apngasm.add_frame_from_rgb(rgb, 3, 3)
-      expect(frame_count).to eq(1)
+  describe '.add_frame_file' do
+    it 'add an APNGFrame object into apngasm' do
+      expect(apngasm.add_frame_file('./spec/support/test1.png', 100, 1000)).to eq(1)
     end
   end
 
-  describe '.add_frame_from_rgba' do
-    it 'add an APNGFrame object made ​​from rgba data into apngasm' do
-      rgba = [[0, 0, 0, 0], [0, 0, 0, 128], [0, 0, 0, 255],
-              [128, 128, 128, 0], [128, 128, 128, 128], [128, 128, 128, 255],
-              [255, 255, 255, 0], [255, 255, 255, 128], [255, 255, 255, 255]]
-      frame_count = apngasm.add_frame_from_rgba(rgba, 3, 3)
+  describe '.add_frame_rgb' do
+    it 'add an APNGFrame object made from rgb data into apngasm' do
+      size = 64
+      rgb = []
+      ((size * size) - 1).times do 
+        (rgb << [Random.rand(256), Random.rand(256), Random.rand(256), Random.rand(256)])
+      end
+
+      frame_count = apngasm.add_frame_rgb(rgb, size, size)
       expect(frame_count).to eq(1)
+      apngasm.assemble('./spec/support/rgb.png')
+    end
+  end
+
+  describe '.add_frame_rgba' do
+    it 'add an APNGFrame object made from rgba data into apngasm' do
+      size = 64
+      rgba = []
+      ((size * size) - 1).times do 
+        rgba << [Random.rand(256), Random.rand(256), Random.rand(256),
+                 Random.rand(256),  Random.rand(256)]
+      end
+
+      frame_count = apngasm.add_frame_rgba(rgba, size, size)
+      expect(frame_count).to eq(1)
+      apngasm.assemble('./spec/support/rgba.png')
     end
   end
 
