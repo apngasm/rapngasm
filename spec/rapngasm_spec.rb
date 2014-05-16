@@ -44,7 +44,7 @@ describe 'APNGAsm'  do
       size = 64
       rgb = []
       ((size * size) - 1).times do 
-        (rgb << [Random.rand(256), Random.rand(256), Random.rand(256), Random.rand(256)])
+        rgb << [Random.rand(256), Random.rand(256), Random.rand(256)]
       end
 
       frame_count = apngasm.add_frame_rgb(rgb, size, size)
@@ -59,7 +59,7 @@ describe 'APNGAsm'  do
       rgba = []
       ((size * size) - 1).times do 
         rgba << [Random.rand(256), Random.rand(256), Random.rand(256),
-                 Random.rand(256),  Random.rand(256)]
+                 Random.rand(256)]
       end
 
       frame_count = apngasm.add_frame_rgba(rgba, size, size)
@@ -70,8 +70,8 @@ describe 'APNGAsm'  do
 
   describe '.assemble' do
     it 'creates an animated PNG file from frames' do
-      apngasm.add_frame_from_file('./spec/support/test1.png', 100, 1000)
-      apngasm.add_frame_from_file('./spec/support/test2.png', 100, 1000)
+      apngasm.add_frame_file('./spec/support/test1.png', 100, 1000)
+      apngasm.add_frame_file('./spec/support/test2.png', 100, 1000)
       Dir.mkdir('./spec/out') unless Dir.exist?('./spec/out')
       apngasm.assemble('./spec/out/apngasm_anim.png')
       expect(File.exist?('./spec/out/apngasm_anim.png')).to eq(true)
