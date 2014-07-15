@@ -2,6 +2,10 @@ rapngasm [![Gem Version](https://badge.fury.io/rb/rapngasm.svg)](http://badge.fu
 ========
 Ruby interface for apngasm
 
+Requirements
+------------
+rapngasm requires libapngasm. Install instructions can be found in the "Installation" section [here](https://github.com/apngasm/apngasm).
+
 Building
 --------
 ```
