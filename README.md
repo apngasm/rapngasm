@@ -4,7 +4,7 @@ Ruby interface for apngasm
 
 Requirements
 ------------
-rapngasm requires libapngasm. Install instructions can be found in the "Installation" section [here](https://github.com/apngasm/apngasm).
+rapngasm requires libapngasm. Install instructions can be found in the "Installing" section [here](https://github.com/apngasm/apngasm).
 
 Building
 --------
