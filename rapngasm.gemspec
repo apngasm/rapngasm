@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'rapngasm'
-  s.version     = '3.1.3'
+  s.version     = '3.1.4.pre'
   s.license     = 'libpng/zlib'
   s.summary     = 'apngasm for Ruby'
   s.description = 'Ruby native extension for the apngasm APNG Assembler.'
@@ -8,10 +8,15 @@ Gem::Specification.new do |s|
   s.email       = 'zero@genshin.org'
   s.homepage    = 'http://www.github.com/apngasm/rapngasm'
 
-  s.files       = Dir.glob('ext/**/*.{h,c,cpp,rb}') +
-                  Dir.glob('lib/**/*.rb')
-  s.extensions << 'ext/rapngasm/extconf.rb'
+  s.files = `git ls-files`.split("\n")
+  s.files += Dir.chdir("vendor/rapngasm") do
+  `git ls-files`.split("\n").reject {|f| f =~ /^out/}.map {|f| "vendor/rapngasm/#{f}"}
+  end
+  s.files += Dir['vendor/rapngasm/build/**/*']
 
-  s.add_dependency 'rake-compiler', '~> 0.9', '~> 0.9.2'
-  s.add_dependency 'rice', '~> 1.6', '~> 1.6.2'
+  s.extensions = ['ext/rapngasm/extconf.rb']
+  s.require_paths = ['lib', 'ext']
+
+  s.add_development_dependency 'rake-compiler', '~> 0.9', '~> 0.9.2'
+  s.add_development_dependency 'rice', '~> 1.6', '~> 1.6.2'
 end
