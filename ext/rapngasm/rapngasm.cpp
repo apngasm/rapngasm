@@ -81,8 +81,8 @@ void Init_rapngasm()
 
 	typedef size_t (APNGAsm::*add_frame_object)(const APNGFrame&);
 	typedef size_t (APNGAsm::*add_frame_file)(const std::string&, unsigned, unsigned);
-    typedef size_t (APNGAsm::*add_frame_rgb)(rgb*, unsigned int, unsigned int, rgb*, unsigned, unsigned);
-    typedef size_t (APNGAsm::*add_frame_rgba)(rgba*, unsigned int, unsigned int, unsigned, unsigned);
+  typedef size_t (APNGAsm::*add_frame_rgb)(rgb*, unsigned int, unsigned int, rgb*, unsigned, unsigned);
+  typedef size_t (APNGAsm::*add_frame_rgba)(rgba*, unsigned int, unsigned int, unsigned, unsigned);
 	define_class<APNGAsm>("APNGAsm")
 		.define_constructor(Constructor<APNGAsm>())
 		.define_method("assemble", &APNGAsm::assemble)

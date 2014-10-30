@@ -1,4 +1,5 @@
 require 'rapngasm'
+#require 'ruby-prof'
 
 describe 'APNGAsm'  do
   let(:apngasm) do
@@ -85,6 +86,23 @@ describe 'APNGAsm'  do
       apngframes = apngasm.disassemble('./spec/out/apngasm_anim.png')
       expect(apngframes).to be_an_instance_of(Array)
       FileUtils.rm_rf('./spec/out')
+    end
+  end
+
+  describe '=LEAK TEST=' do
+    it 'doesn\'t leak memory on consecutive instantiation' do
+      #Dir.mkdir('./spec/out') unless Dir.exist?('./spec/out')
+      #RubyProf.measure_mode = RubyProf::MEMORY
+      #RubyProf.start
+      20000.times do
+        apngasm_m = APNGAsm.new
+        apngasm_m.add_frame_file('./spec/support/test1.png', 100, 1000)
+        apngasm_m.add_frame_file('./spec/support/test2.png', 100, 1000)
+      end
+      #result = RubyProf.stop
+      #printer = RubyProf::FlatPrinter.new(result)
+      #printer.print(STDOUT)
+      #FileUtils.rm_rf('./spec/out')
     end
   end
 end
