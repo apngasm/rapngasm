@@ -9,8 +9,10 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://www.github.com/apngasm/rapngasm'
 
   s.files = `git ls-files`.split("\n")
-  s.files += Dir.chdir("vendor/rapngasm") do
-  `git ls-files`.split("\n").reject {|f| f =~ /^out/}.map {|f| "vendor/rapngasm/#{f}"}
+
+  #native extension includes
+  s.files += Dir.chdir('vendor/rapngasm') do
+    `git ls-files`.split("\n").reject {|f| f =~ /^out/}.map {|f| "vendor/rapngasm/#{f}"}
   end
   s.files += Dir['vendor/rapngasm/build/**/*']
 
