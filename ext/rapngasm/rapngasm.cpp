@@ -57,6 +57,16 @@ rgba* from_ruby< rgba* > (Object o)
   return rgbaArray;
 }
 
+template<>
+const std::string& from_ruby< const std::string& > (Object o)
+{
+  static std::string tmp;
+  String str(o);
+  tmp.clear();
+  tmp.append(str.c_str());
+  return tmp;
+}
+
 //size_t APNGAsm::wrap_add_frame_rgb(Object pixels, unsigned int width, unsigned int height, Object trns_color = NULL, unsigned delayNum = DEFAULT_FRAME_NUMERATOR, unsigned delayDen = DEFAULT_FRAME_DENOMINATOR) {
 //	return this.addFrame(from_ruby<rgb*>(pixels), width, height, from_ruby<rgb*>(trns_color), delayNum, delayDen);
 //}

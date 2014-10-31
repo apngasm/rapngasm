@@ -94,10 +94,24 @@ describe 'APNGAsm'  do
       #Dir.mkdir('./spec/out') unless Dir.exist?('./spec/out')
       #RubyProf.measure_mode = RubyProf::MEMORY
       #RubyProf.start
-      20000.times do
+      count = 0
+      loop = 10000
+      interval = 1000
+      loop.times do
         apngasm_m = APNGAsm.new
         apngasm_m.add_frame_file('./spec/support/test1.png', 100, 1000)
         apngasm_m.add_frame_file('./spec/support/test2.png', 100, 1000)
+        apngasm_m.reset
+        apngasm_m = nil
+
+        count += 1
+        if (count % interval) == 0
+          # disabled = GC.enable
+          # GC.start
+          # GC.disable if disabled
+
+          # p "#{count}/#{loop}"
+        end
       end
       #result = RubyProf.stop
       #printer = RubyProf::FlatPrinter.new(result)
