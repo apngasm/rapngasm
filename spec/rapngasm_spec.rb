@@ -1,5 +1,4 @@
-require 'rapngasm'
-#require 'ruby-prof'
+require 'spec_helper'
 
 describe 'APNGAsm'  do
   let(:apngasm) do
@@ -91,32 +90,11 @@ describe 'APNGAsm'  do
 
   describe '=LEAK TEST=' do
     it 'doesn\'t leak memory on consecutive instantiation' do
-      #Dir.mkdir('./spec/out') unless Dir.exist?('./spec/out')
-      #RubyProf.measure_mode = RubyProf::MEMORY
-      #RubyProf.start
-      count = 0
-      loop = 10000
-      interval = 1000
-      loop.times do
-        apngasm_m = APNGAsm.new
-        apngasm_m.add_frame_file('./spec/support/test1.png', 100, 1000)
-        apngasm_m.add_frame_file('./spec/support/test2.png', 100, 1000)
-        apngasm_m.reset
-        apngasm_m = nil
-
-        count += 1
-        if (count % interval) == 0
-          # disabled = GC.enable
-          # GC.start
-          # GC.disable if disabled
-
-          # p "#{count}/#{loop}"
-        end
-      end
-      #result = RubyProf.stop
-      #printer = RubyProf::FlatPrinter.new(result)
-      #printer.print(STDOUT)
-      #FileUtils.rm_rf('./spec/out')
+      t1 = Thread.new{leak_thread_unit(1000, 't1')}
+      t2 = Thread.new{leak_thread_unit(1000, 't2')}
+      leak_thread_unit(1000, 'tmain')
+      t1.join
+      t2.join
     end
   end
 end
