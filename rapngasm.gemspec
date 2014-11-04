@@ -8,7 +8,8 @@ Gem::Specification.new do |s|
   s.email       = 'zero@genshin.org'
   s.homepage    = 'http://www.github.com/apngasm/rapngasm'
 
-  s.files       = Dir.glob('ext/**/*.{h,c,cpp,rb}') +
+  s.files       = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) } +
+                  Dir.glob('ext/**/*.{h,c,cpp,rb}') +
                   Dir.glob('lib/**/*.rb') +
                   Dir.glob('vendor/**/*')
 
