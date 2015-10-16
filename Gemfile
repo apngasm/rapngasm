@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gemspec
 
+gem 'rice', path: '../../rice-original'
+
 group :development do
   gem 'libnotify'
   gem 'guard'
