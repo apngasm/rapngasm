@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'mkmf-rice'
 
 $CFLAGS = '-x c++'
