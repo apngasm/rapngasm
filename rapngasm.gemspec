@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.email       = 'zero@genshin.org'
   s.homepage    = 'http://www.github.com/apngasm/rapngasm'
 
-  s.files       = [Dir.glob('ext/**/*.{h,c,cpp,rb}'),
-                  Dir.glob('lib/**/*.rb'),
-                  Dir.glob('vendor/**/*'),
-                  'rapngasm.gemspec']
+  s.files       = Dir.glob('ext/**/*.{h,c,cpp,rb}') +
+                  Dir.glob('lib/**/*.rb') +
+                  Dir.glob('vendor/**/*') +
+                  ['rapngasm.gemspec']
 
   s.extensions << 'ext/rapngasm/extconf.rb'
   s.require_paths = ['lib', 'ext']
