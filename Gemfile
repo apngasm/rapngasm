@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rice', github: 'kagetsuki/rice'
+gem 'gear', path: '../../gear'
 
 group :development do
   gem 'libnotify'
@@ -10,5 +10,4 @@ group :development do
   gem 'guard-rspec'
   gem 'rubocop'
   gem 'guard-rubocop'
-  # gem 'ruby-prof'
 end

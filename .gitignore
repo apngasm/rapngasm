@@ -2,6 +2,7 @@
 *.swo
 *.o
 *.so
+*.gem
 Gemfile.lock
 tmp/
 mkmkf.log
