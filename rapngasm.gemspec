@@ -14,8 +14,8 @@ Gem::Specification.new do |s|
                   ['rapngasm.gemspec']
 
   s.extensions << 'ext/rapngasm/extconf.rb'
-  s.require_paths = ['lib', 'ext']
+  s.require_paths = ['lib', 'vendor/lib']
  
-  s.add_dependency 'rake-compiler'
+  #s.add_dependency 'rake-compiler'
   s.add_dependency 'gear'
 end

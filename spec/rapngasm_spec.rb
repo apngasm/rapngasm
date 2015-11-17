@@ -1,23 +1,23 @@
 require 'spec_helper'
 
-describe 'APNGAsm'  do
+describe 'APNGAsm::APNGAsm'  do
   let(:apngasm) do
-    APNGAsm.new
+    APNGAsm::APNGAsm.new
   end
 
   let(:apngframe) do
-    APNGFrame.new
+    APNGAsm::APNGFrame.new
   end
 
   describe 'APNGAsm.new' do
     it 'creates an apngasm object' do
-      expect(apngasm).to be_an_instance_of(APNGAsm)
+      expect(apngasm).to be_an_instance_of(APNGAsm::APNGAsm)
     end
   end
 
   describe 'APNGFrame.new' do
     it 'creates an APNG Frame object' do
-      expect(apngframe).to be_an_instance_of(APNGFrame)
+      expect(apngframe).to be_an_instance_of(APNGAsm::APNGFrame)
     end
   end
 

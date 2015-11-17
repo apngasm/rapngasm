@@ -1,4 +1,4 @@
-require 'rapngasm'
+require 'RAPNGAsm'
 #require 'ruby-prof'
 
 def leak_thread_unit(iterations, out_name)
@@ -8,7 +8,7 @@ def leak_thread_unit(iterations, out_name)
   count = 0
   interval = 1000
   iterations.times do
-    apngasm_m = APNGAsm.new
+    apngasm_m = APNGAsm::APNGAsm.new
     apngasm_m.add_frame_file('./spec/support/test1.png', 100, 1000)
     apngasm_m.add_frame_file('./spec/support/test2.png', 100, 1000)
     #apngasm_m.assemble("./spec/out/#{out_name}.png")
