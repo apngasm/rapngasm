@@ -1,4 +1,4 @@
-require 'mkmf'
+#require 'mkmf'
 
 require 'gear'
 require 'gears/boost'
@@ -75,11 +75,11 @@ do_cleanup()
 # else
 #   puts 'apngasm is not installed or the headers are not in the system path.'
 # end
-extension_name = 'rapngasm'
-
-#swig_command = find_executable 'swig'
-
-find_library('RAPNGAsm', nil)
-
-dir_config(extension_name)
-create_makefile('rapngasm')
+#extension_name = 'rapngasm'
+#
+##swig_command = find_executable 'swig'
+#
+#find_library('RAPNGAsm', nil)
+#
+#dir_config(extension_name)
+#create_makefile('rapngasm')

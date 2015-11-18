@@ -6,7 +6,6 @@
 Gemfile.lock
 tmp/
 mkmkf.log
-Makefile
 .DS_Store
 *.bundle
 spec/out/*
