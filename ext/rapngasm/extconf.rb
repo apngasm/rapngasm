@@ -82,4 +82,4 @@ extension_name = 'rapngasm'
 find_library('RAPNGAsm', nil)
 
 dir_config(extension_name)
-create_makefile('rapngasm/rapngasm')
+create_makefile('rapngasm')
