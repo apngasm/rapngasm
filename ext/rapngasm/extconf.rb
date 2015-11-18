@@ -55,8 +55,8 @@ def do_apngasm()
   `cmake -DRUBY=true ..`
   `make`
   `make ruby`
-  FileUtils.cp("#{@apngasm.build_path}/build/lib/libapngasm.so", File.dirname(__FILE__) + '/../../lib/')
-  FileUtils.cp("#{@apngasm.build_path}/build/RAPNGAsm.so", File.dirname(__FILE__) + '/../../lib/')
+  FileUtils.cp("#{@apngasm.build_path}/build/lib/libapngasm.so", Gears::APNGAsm::install_path() + '/lib/')
+  FileUtils.cp("#{@apngasm.build_path}/build/RAPNGAsm.so", Gears::APNGAsm::install_path() + '/lib/')
   #@apngasm.install # TODO error check and bail
   true
 end
