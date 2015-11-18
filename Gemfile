@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'rake'
+gem 'gear'
 
 group :development do
   gem 'libnotify'
