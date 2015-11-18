@@ -1,13 +1,10 @@
-require 'rubygems'
+require 'mkmf'
+
 require 'gear'
 require 'gears/boost'
 require 'gears/swig'
 require 'gears/apngasm'
 
-#$CFLAGS = '-x c++'
-#$LOCAL_LIBS = '-lapngasm'
-
-#dir_config 'apngasm'
 
 def do_boost()
   puts '== Checking for Boost =='
@@ -57,7 +54,6 @@ def do_apngasm()
   `make ruby`
   FileUtils.cp("#{@apngasm.build_path}/build/lib/libapngasm.so", Gears::APNGAsm::install_path() + '/lib/')
   FileUtils.cp("#{@apngasm.build_path}/build/RAPNGAsm.so", Gears::APNGAsm::install_path() + '/lib/')
-  #@apngasm.install # TODO error check and bail
   true
 end
 
@@ -70,7 +66,6 @@ puts '=== Building RAPNGAsm ==='
 do_boost() &&
 do_swig() &&
 do_apngasm()
-# TODO build rapngasm from apngasm with SWIG
 do_cleanup()
 
 
@@ -80,3 +75,11 @@ do_cleanup()
 # else
 #   puts 'apngasm is not installed or the headers are not in the system path.'
 # end
+extension_name = 'rapngasm'
+
+#swig_command = find_executable 'swig'
+
+find_library('RAPNGAsm', nil)
+
+dir_config(extension_name)
+create_makefile('rapngasm/rapngasm')

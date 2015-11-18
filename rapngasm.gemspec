@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.email       = 'zero@genshin.org'
   s.homepage    = 'http://www.github.com/apngasm/rapngasm'
 
-  s.files       = Dir.glob('ext/**/*.{h,c,cpp,rb}') +
+  s.files       = Dir.glob('ext/**/*') +
                   Dir.glob('lib/**/*.rb') +
                   Dir.glob('vendor/**/*') +
                   ['rapngasm.gemspec']
@@ -16,6 +16,5 @@ Gem::Specification.new do |s|
   s.extensions << 'ext/rapngasm/extconf.rb'
   s.require_paths = ['lib', 'vendor/lib']
  
-  #s.add_dependency 'rake-compiler'
-  s.add_dependency 'gear'
+  s.add_runtime_dependency 'gear', '~> 0.0'
 end
