@@ -1,10 +1,11 @@
 require 'rubygems'
+require 'gear'
 require 'gears/boost'
 require 'gears/swig'
 require 'gears/apngasm'
 
-$CFLAGS = '-x c++'
-$LOCAL_LIBS = '-lapngasm'
+#$CFLAGS = '-x c++'
+#$LOCAL_LIBS = '-lapngasm'
 
 #dir_config 'apngasm'
 
