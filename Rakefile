@@ -5,4 +5,5 @@
 
 task :compile do
   require_relative 'ext/rapngasm/extconf'
+  `make -C ext/rapngasm -f Makefile`
 end
