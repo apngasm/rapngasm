@@ -2,6 +2,8 @@
 
 require 'gear'
 require 'gears/boost'
+require 'gears/libarchive'
+require 'gears/cmake'
 require 'gears/swig'
 require 'gears/apngasm'
 
@@ -12,9 +14,9 @@ def do_boost()
   @boost = Gears::Boost.new
 
   if @boost.check
-    puts 'System Boost found! Skipping build.'
+    puts 'Boost found! Skipping build.'
   else
-    puts 'Boost not found. Beginning build (this will take a LONG time)...'
+    puts 'Boost not found. Building (this will take a LONG time)...'
     @boost.obtain &&
     @boost.build &&
     @boost.install # TODO error check and bail
@@ -28,12 +30,25 @@ def do_swig()
   @swig = Gears::SWIG.new
 
   if @swig.check
-    puts 'System SWIG found! Skipping build.'
+    puts 'SWIG found! Skipping build.'
   else
-    puts 'SWIG not found. Beginning build...'
+    puts 'SWIG not found. Building...'
     @swig.obtain &&
     @swig.build &&
     @swig.install # TODO error check and bail
+  end
+  true
+end
+
+def do_cmake()
+  puts '== Checking for CMake =='
+
+  @cmake = Gears::CMake.new
+
+  if @cmake.check
+    puts 'CMake found! Skipping build.'
+  else
+    puts 'CMake not found. Building...'
   end
   true
 end
@@ -60,10 +75,17 @@ end
 def do_cleanup()
   # TODO remove unneeded boost libraries
   @swig.uninstall
+  @swig.remove
+  @cmake.uninstall
+  @cmake.remove
+  la = Gears::LibArchive.new
+  la.uninstall
+  la.remove
 end
 
 puts '=== Building RAPNGAsm ==='
 do_boost() &&
+do_cmake() &&
 do_swig() &&
 do_apngasm()
 do_cleanup()
