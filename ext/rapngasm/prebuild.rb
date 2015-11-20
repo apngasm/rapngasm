@@ -47,6 +47,9 @@ def do_cmake()
     puts 'CMake found! Skipping build.'
   else
     puts 'CMake not found. Building...'
+    @cmake.obtain &&
+    @cmake.build &&
+    @cmake.install
   end
   true
 end
@@ -56,36 +59,24 @@ def do_apngasm()
 
   @apngasm = Gears::APNGAsm.new
 
-  @apngasm.obtain
-  puts "APNGAsm building in #{@apngasm.build_path}"
-  Dir.chdir(@apngasm.build_path)
-  `git checkout swig_interfaces` # TODO temporary
-  FileUtils.mkdir('build')
-  Dir.chdir('build')
-  `cmake -DRUBY=true ..`
-  `make`
-  `make ruby`
-  FileUtils.cp("#{@apngasm.build_path}/build/lib/libapngasm.so", Gears::APNGAsm::install_path() + '/lib/')
-  FileUtils.cp("#{@apngasm.build_path}/build/RAPNGAsm.so", Gears::APNGAsm::install_path() + '/lib/')
-  true
+  @apngasm.engage
+  # @apngasm.obtain
+  # puts "APNGAsm building in #{@apngasm.build_path}"
+  # Dir.chdir(@apngasm.build_path)
+  # `git checkout swig_interfaces` # TODO temporary
+  # FileUtils.mkdir('build')
+  # Dir.chdir('build')
+  # `cmake -DRUBY=true ..`
+  # `make`
+  # `make ruby`
+  # FileUtils.cp("#{@apngasm.build_path}/build/lib/libapngasm.so", Gears::APNGAsm::install_path() + '/lib/')
+  # FileUtils.cp("#{@apngasm.build_path}/build/RAPNGAsm.so", Gears::APNGAsm::install_path() + '/lib/')
+  # true
 end
 
-def do_cleanup()
-  # TODO remove unneeded boost libraries
-  @swig.uninstall
-  @swig.remove
-  @cmake.uninstall
-  @cmake.remove
-  la = Gears::LibArchive.new
-  la.uninstall
-  la.remove
-end
 
 puts '=== Building RAPNGAsm ==='
 do_boost() &&
 do_cmake() &&
-do_swig()
-#do_apngasm()
-#do_cleanup()
-
-
+do_swig() &&
+do_apngasm()
