@@ -1,16 +1,19 @@
-#require 'mkmf'
+require 'mkmf'
 
 
-# if have_header('apngasm.h')
-#create_makefile 'rapngasm'
-# else
-#   puts 'apngasm is not installed or the headers are not in the system path.'
-# end
-#extension_name = 'rapngasm'
-#
-##swig_command = find_executable 'swig'
-#
-#find_library('RAPNGAsm', nil)
-#
-#dir_config(extension_name)
-#create_makefile('rapngasm')
+$stdout.write 'Checking for APNGAsm.'
+if have_header('apngasm.h') && have_library('apngasm')
+  $stdout.write 'APNGAsm found, building RAPNGAsm.'
+else
+  $stdout.write 'APNGAsm NOT found, Attempting to build...'
+  require_relative 'prebuild.rb' 
+end
+
+dir_config('rapngasm')
+
+$stdout.write 'Generating native interface wrappers with SWIG'
+`swig -c++ -ruby apngasm.i`
+$stdout.write 'Wrappers generated'
+$distcleanfiles += ['apngasm_wrap.cxx']
+
+create_makefile('rapngasm')

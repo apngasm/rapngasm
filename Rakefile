@@ -1,11 +1,9 @@
-#require 'rake/extensiontask'
-#
-#spec = Gem::Specification.load('rapngasm.gemspec')
-#Rake::ExtensionTask.new('rapngasm', spec)
+require 'rake/extensiontask'
 
-task :compile do
-  require_relative 'ext/rapngasm/extconf'
-  `make -C ext/rapngasm -f Makefile`
-end
+spec = Gem::Specification.load('rapngasm.gemspec')
+Rake::ExtensionTask.new('rapngasm', spec)
 
-task default: :compile
+#task :compile do
+#  require_relative 'ext/rapngasm/extconf'
+#  `make -C ext/rapngasm -f Makefile`
+#end

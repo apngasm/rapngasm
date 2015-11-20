@@ -16,5 +16,6 @@ Gem::Specification.new do |s|
   s.extensions << 'ext/rapngasm/extconf.rb'
   s.require_paths = ['lib', 'vendor/lib']
  
+  s.add_development_dependency 'rake-compiler', '~> 0.9'
   s.add_runtime_dependency 'gear', '~> 0.0'
 end
