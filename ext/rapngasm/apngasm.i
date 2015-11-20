@@ -1,11 +1,11 @@
 %module APNGAsm
 
 // For ruby.
-//#ifdef SWIGRUBY
+#ifdef SWIGRUBY
 
 // Replace init method name.
 %{
-#define Init_APNGAsm Init_RAPNGAsm
+#define Init_APNGAsm Init_rapngasm
 %}
 
 // Rename methods.
@@ -30,7 +30,7 @@
 %rename(is_skip_first) apngasm::APNGAsm::isSkipFirst;
 %rename(frame_count) apngasm::APNGAsm::frameCount;
 
-//#endif  // SWIGRUBY
+#endif  // SWIGRUBY
 
 
 

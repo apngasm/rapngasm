@@ -6,6 +6,9 @@
 Gemfile.lock
 tmp/
 mkmkf.log
+mkmf.log
 .DS_Store
 *.bundle
 spec/out/*
+Makefile
+ext/rapngasm/apngasm_wrap.cxx
