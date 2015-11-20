@@ -76,7 +76,7 @@ end
 
 
 puts '=== Building RAPNGAsm ==='
-do_boost() &&
+#do_boost() &&
 do_cmake() &&
 do_swig() &&
 do_apngasm()
