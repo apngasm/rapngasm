@@ -4,7 +4,7 @@ ext_source_path = File.dirname(__FILE__)
 
 return unless have_library('stdc++')
 
-require_relative "#{ext_source_path}/../tools/prebuild"
+require_relative '../tools/prebuild'
 
 $stdout.write 'Checking for APNGAsm.'
 if have_library('apngasm')
