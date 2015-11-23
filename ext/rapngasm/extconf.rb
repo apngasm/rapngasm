@@ -1,16 +1,14 @@
 require 'mkmf'
 
-return unless have_library('stdc++')
+return unless have_library('stdc++') # make sure we don't have some funny system
 
-#$stdout.write 'Checking for APNGAsm.'
-#if have_library('apngasm')
-#  $stdout.write 'APNGAsm found, building RAPNGAsm.'
-#else
-#  $stdout.write 'APNGAsm NOT found. Please install libapngasm.'
-#  exit 1
-#end
-#
-$libs = append_library($libs, 'apngasm')
+$stdout.write 'Checking for APNGAsm.'
+if have_library('apngasm')
+  $stdout.write 'APNGAsm found, building RAPNGAsm.'
+else
+  $stdout.write 'APNGAsm NOT found. Please install libapngasm.'
+  exit 1
+end
 
 dir_config('rapngasm')
 
