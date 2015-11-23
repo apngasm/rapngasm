@@ -1,23 +1,21 @@
 require 'mkmf'
 
-ext_source_path = File.dirname(__FILE__)
-
 return unless have_library('stdc++')
 
-require_relative '../tools/prebuild'
-
-$stdout.write 'Checking for APNGAsm.'
-if have_library('apngasm')
-  $stdout.write 'APNGAsm found, building RAPNGAsm.'
-else
-  $stdout.write 'APNGAsm NOT found. Please install libapngasm.'
-  exit 1
-end
+#$stdout.write 'Checking for APNGAsm.'
+#if have_library('apngasm')
+#  $stdout.write 'APNGAsm found, building RAPNGAsm.'
+#else
+#  $stdout.write 'APNGAsm NOT found. Please install libapngasm.'
+#  exit 1
+#end
+#
+$libs = append_library($libs, 'apngasm')
 
 dir_config('rapngasm')
 
 $stdout.write 'Generating native interface wrappers with SWIG'
-`swig -c++ -ruby #{ext_source_path}/apngasm.i`
+`swig -c++ -ruby apngasm.i`
 $stdout.write 'Wrappers generated'
 $distcleanfiles += ['apngasm_wrap.cxx']
 
