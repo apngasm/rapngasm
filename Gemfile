@@ -4,6 +4,8 @@ gemspec
 
 gem 'rake'
 
+gem 'gear', path: '../../gear'
+
 group :development do
   gem 'libnotify'
   gem 'guard'

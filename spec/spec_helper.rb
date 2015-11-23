@@ -1,4 +1,4 @@
-require 'RAPNGAsm'
+require 'rapngasm'
 #require 'ruby-prof'
 
 def leak_thread_unit(iterations, out_name)
