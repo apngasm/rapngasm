@@ -12,3 +12,4 @@ mkmf.log
 spec/out/*
 Makefile
 ext/rapngasm/apngasm_wrap.cxx
+ext/rapngasm/apng_wrap.cxx
