@@ -1,11 +1,19 @@
-%module APNGAsm
+%module APNG
+
+// For java.
+%pragma(java) jniclasscode=%{
+  static
+  {
+    NativeLibLoader.load();
+  }
+%}
 
 // For ruby.
 #ifdef SWIGRUBY
 
 // Replace init method name.
 %{
-#define Init_APNGAsm Init_rapngasm
+#define Init_APNG Init_rapngasm
 %}
 
 // Rename methods.
@@ -30,6 +38,9 @@
 %rename(is_skip_first) apngasm::APNGAsm::isSkipFirst;
 %rename(frame_count) apngasm::APNGAsm::frameCount;
 
+%rename(Rgb) apngasm::rgb;
+%rename(Rgba) apngasm::rgba;
+
 #endif  // SWIGRUBY
 
 
@@ -44,6 +55,7 @@
 %include "std_string.i"
 %include "std_vector.i"
 
+//%include "apngasm-conf.h"
 
 namespace apngasm {
   typedef struct { unsigned char r, g, b; } rgb;
