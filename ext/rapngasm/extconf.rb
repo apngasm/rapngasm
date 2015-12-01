@@ -15,7 +15,7 @@ dir_config('rapngasm')
 $stdout.write "\nGenerating native interface wrappers with SWIG\n"
 $stdout.write "Using SWIG from #{`which swig`}\n"
 $stdout.write "Generating wrapper sources from #{File.expand_path(File.dirname(__FILE__))}/apngasm.i\n"
-`swig -c++ -ruby #{File.expand_path(File.dirname(__FILE__))}/apng.i`
+`swig -c++ -ruby -l/usr/include #{File.expand_path(File.dirname(__FILE__))}/apng.i`
 $stdout.write 'Wrappers generated'
 $distcleanfiles += ['apngasm_wrap.cxx']
 

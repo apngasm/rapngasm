@@ -88,13 +88,13 @@ describe 'APNG::APNGAsm'  do
     end
   end
 
-  describe '=LEAK TEST=' do
-    it 'doesn\'t leak memory on consecutive instantiation' do
-      t1 = Thread.new{leak_thread_unit(1000, 't1')}
-      t2 = Thread.new{leak_thread_unit(1000, 't2')}
-      leak_thread_unit(1000, 'tmain')
-      t1.join
-      t2.join
-    end
-  end
+#  describe '=LEAK TEST=' do
+#    it 'doesn\'t leak memory on consecutive instantiation' do
+#      t1 = Thread.new{leak_thread_unit(1000, 't1')}
+#      t2 = Thread.new{leak_thread_unit(1000, 't2')}
+#      leak_thread_unit(1000, 'tmain')
+#      t1.join
+#      t2.join
+#    end
+#  end
 end
