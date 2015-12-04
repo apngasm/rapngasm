@@ -13,3 +13,5 @@ spec/out/*
 Makefile
 ext/rapngasm/apngasm_wrap.cxx
 ext/rapngasm/apng_wrap.cxx
+spec/support/rgb.png
+spec/support/rgba.png
