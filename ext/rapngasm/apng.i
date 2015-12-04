@@ -16,6 +16,33 @@
 #define Init_APNG Init_rapngasm
 %}
 
+// Convert array.
+%typecheck(SWIG_TYPECHECK_POINTER) apngasm::rgb *pixels, apngasm::rgb *trns_color, apngasm::rgba *pixels
+{
+  $1 = ( (TYPE($input) == T_ARRAY) && (TYPE(rb_ary_entry($input, 0)) == T_DATA) ) ? 1 : 0;
+}
+
+%typemap(in) apngasm::rgb *pixels, apngasm::rgb *trns_color, apngasm::rgba *pixels
+{
+  Check_Type($input, T_ARRAY);
+  int size = RARRAY_LEN($input);
+  $1 = ($1_type)malloc(size*sizeof($*1_type));
+  for(int i = 0;  i < size;  ++i)
+  {
+    VALUE inst = rb_ary_entry($input, i);
+    Check_Type(inst, T_DATA);
+    $1_type element = NULL;
+    Data_Get_Struct(inst, $*1_type, element);
+    $1[i] = *element;
+  }
+}
+
+%typemap(freearg) apngasm::rgb *pixels, apngasm::rgb *trns_color, apngasm::rgba *pixels
+{
+  if($1)
+    free($1);
+}
+
 // Rename methods.
 %rename(color_type) apngasm::APNGFrame::colorType;
 %rename(palette_size) apngasm::APNGFrame::paletteSize;
@@ -56,7 +83,6 @@
 %include "std_vector.i"
 
 %include "apngasm-conf.h"
-%include <apngasm-conf.h>
 
 namespace apngasm {
   typedef struct { unsigned char r, g, b; } rgb;
