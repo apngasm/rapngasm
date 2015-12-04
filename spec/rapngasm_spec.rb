@@ -43,12 +43,19 @@ describe 'APNG::APNGAsm'  do
     it 'add an APNGFrame object made from rgb data into apngasm' do
       size = 64
       rgb = []
-      ((size * size) - 1).times do 
-        rgb << [Random.rand(256), Random.rand(256), Random.rand(256)]
+      ((size * size) - 1).times do
+        new_obj = APNG::Rgb.new
+        new_obj.r = Random.rand(256)
+        new_obj.g = Random.rand(256)
+        new_obj.b = Random.rand(256)
+        rgb << new_obj
       end
 
       frame_count = apngasm.add_frame_rgb(rgb, size, size)
       expect(frame_count).to eq(1)
+      frame = apngasm.get_frames[0];
+      expect(frame.width).to eq(size)
+      expect(frame.height).to eq(size)
       apngasm.assemble('./spec/support/rgb.png')
     end
   end
@@ -57,13 +64,20 @@ describe 'APNG::APNGAsm'  do
     it 'add an APNGFrame object made from rgba data into apngasm' do
       size = 64
       rgba = []
-      ((size * size) - 1).times do 
-        rgba << [Random.rand(256), Random.rand(256), Random.rand(256),
-                 Random.rand(256)]
+      ((size * size) - 1).times do
+        new_obj = APNG::Rgba.new
+        new_obj.r = Random.rand(256)
+        new_obj.g = Random.rand(256)
+        new_obj.b = Random.rand(256)
+        new_obj.a = Random.rand(256)
+        rgba << new_obj
       end
 
       frame_count = apngasm.add_frame_rgba(rgba, size, size)
       expect(frame_count).to eq(1)
+      frame = apngasm.get_frames[0];
+      expect(frame.width).to eq(size)
+      expect(frame.height).to eq(size)
       apngasm.assemble('./spec/support/rgba.png')
     end
   end
@@ -83,18 +97,20 @@ describe 'APNG::APNGAsm'  do
     it 'disassemble the frames of an anmated PNG file into PNGs' do
       Dir.mkdir('./spec/out') unless Dir.exist?('./spec/out')
       apngframes = apngasm.disassemble('./spec/out/apngasm_anim.png')
-      expect(apngframes).to be_an_instance_of(Array)
+      expect(apngframes).to be_an_instance_of(APNG::APNGFrameVector)
       FileUtils.rm_rf('./spec/out')
     end
   end
 
-#  describe '=LEAK TEST=' do
-#    it 'doesn\'t leak memory on consecutive instantiation' do
-#      t1 = Thread.new{leak_thread_unit(1000, 't1')}
-#      t2 = Thread.new{leak_thread_unit(1000, 't2')}
-#      leak_thread_unit(1000, 'tmain')
-#      t1.join
-#      t2.join
-#    end
-#  end
+=begin
+  describe '=LEAK TEST=' do
+    it 'doesn\'t leak memory on consecutive instantiation' do
+      t1 = Thread.new{leak_thread_unit(1000, 't1')}
+      t2 = Thread.new{leak_thread_unit(1000, 't2')}
+      leak_thread_unit(1000, 'tmain')
+      t1.join
+      t2.join
+    end
+  end
+=end
 end
